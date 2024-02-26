@@ -73,7 +73,7 @@
 
 <body>
 
-    <button class="home-button">&#8962;</button>
+    
 
     <header>
         <h1>Links</h1>
