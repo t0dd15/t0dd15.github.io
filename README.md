@@ -11,7 +11,7 @@
             padding: 0;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
-            background-image: url(https://preview.redd.it/42m1mygghpn61.gif?width=1920&format=mp4&s=e09e2ba7bf9e63965c8f9ecb1fcdbc9a1a548df0);
+            background-image: url(https://s2.best-wallpaper.net/wallpaper/1920x1080/2002/Blue-and-purple-abstract-background_1920x1080.jpg);
             background-repeat: no-repeat;
             background-color: black;
             background-size: cover;
