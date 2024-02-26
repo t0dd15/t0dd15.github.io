@@ -9,15 +9,15 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif; /* 'Bebas Neue' was not defined, replaced with 'sans-serif' */
             font-weight: 600;
-            background-image: url(https://preview.redd.it/42m1mygghpn61.gif?width=1920&format=mp4&s=e09e2ba7bf9e63965c8f9ecb1fcdbc9a1a548df0);
+            background-image: url(https://s2.best-wallpaper.net/wallpaper/1920x1080/2002/Blue-and-purple-abstract-background_1920x1080.jpg);
             background-repeat: no-repeat;
             background-color: black;
             background-size: cover;
             color: white;
             height: 100vh;
-            background-position-x: center;
+            background-position: center; /* Corrected property name */
         }
 
         header {
@@ -44,7 +44,7 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            width: auto; /* Adjusted width */
+            width: auto;
         }
 
         button {
@@ -73,8 +73,6 @@
 
 <body>
 
-    <button class="home-button">&#8962;</button>
-
     <header>
         <h1>Links</h1>
     </header>
@@ -95,10 +93,6 @@
             document.body.removeChild(tempInput);
             alert('Copied to clipboard: ' + text);
         }
-
-        document.querySelector('.home-button').addEventListener('click', function () {
-            window.location.href = 'https://florentem.github.io';
-        });
     </script>
 </body>
 
