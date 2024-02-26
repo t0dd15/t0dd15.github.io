@@ -95,9 +95,6 @@
             document.body.removeChild(tempInput);
             alert('Copied to clipboard: ' + text);
         }
-
-        document.querySelector('.home-button').addEventListener('click', function () {
-            window.location.href = 'https://florentem.github.io';
         });
     </script>
 </body>
