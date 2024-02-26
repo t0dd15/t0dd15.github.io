@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -9,7 +9,7 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', Bebas Neue;
             font-weight: 600;
             background-image: url(https://s2.best-wallpaper.net/wallpaper/1920x1080/2002/Blue-and-purple-abstract-background_1920x1080.jpg);
             background-repeat: no-repeat;
