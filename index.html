@@ -80,23 +80,7 @@
     <div class="links">
         <button onclick="window.location.href='https://t.me/t0dd15'">Telegram</button>
         <button onclick="copyToClipboard('t0dd15')">Discord</button>
-        <button onclick="window.location.href='# Удаление устройства и драйвера
-$deviceName = "Имя устройства"
-
-# Находим устройство и получаем его Hardware ID
-$device = Get-PnpDevice | Where-Object {$_.FriendlyName -eq $deviceName}
-$hwid = $device.HardwareID[0]
-
-# Удаляем устройство
-$device | Disable-PnpDevice -Confirm:$false
-$device | Remove-PnpDevice -Confirm:$false
-
-# Пересканируем устройства
-Get-PnpDevice -PresentOnly
-
-# Устанавливаем драйвер из указанной папки
-$driverPath = "Путь_к_папке_с_драйвером"
-pnputil.exe /add-driver "$driverPath\*.inf" /subdirs /install'">Steam</button>
+        <button onclick="window.location.href=https://steamcommunity.com/id/fuckfuckfuckfuckfuckfuckfucku/">Steam</button>
     </div>
 
     <script>
