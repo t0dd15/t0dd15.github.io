@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>t0dd15 links</title>
+    <title>Links</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif; /* 'Bebas Neue' was not defined, replaced with 'sans-serif' */
+            font-family: 'Inter', sans-serif;
             font-weight: 600;
             background-image: url(https://s2.best-wallpaper.net/wallpaper/1920x1080/2002/Blue-and-purple-abstract-background_1920x1080.jpg);
             background-repeat: no-repeat;
@@ -17,7 +17,7 @@
             background-size: cover;
             color: white;
             height: 100vh;
-            background-position: center; /* Corrected property name */
+            background-position: center;
         }
 
         header {
@@ -67,6 +67,11 @@
             header {
                 font-size: 1.5em;
             }
+
+            button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
         }
     </style>
 </head>
@@ -76,12 +81,18 @@
     <header>
         <h1>Links</h1>
     </header>
-      <img src="animation.gif.mp4" alt="Описание изображения" width="500" height="300">
+
+    <!-- Замена img на video -->
+    <video width="500" height="300" controls>
+        <source src="animation.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
     <div class="links">
         <button onclick="window.location.href='https://t.me/t0dd15'">Telegram</button>
-        <button onclick="copyToClipboard('t0dd15')">Discord</button>
-        <button onclick="window.location.href=https://steamcommunity.com/id/fuckfuckfuckfuckfuckfuckfucku/">Steam</button>
+        
+        <button onclick="copyToClipboard('t0dd15#1234')">Discord</button>
+    
     </div>
 
     <script>
