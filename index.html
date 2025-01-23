@@ -1,111 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Links</title>
+    <title>Gamer Links</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            background-image: url(https://s2.best-wallpaper.net/wallpaper/1920x1080/2002/Blue-and-purple-abstract-background_1920x1080.jpg);
-            background-repeat: no-repeat;
-            background-color: black;
-            background-size: cover;
-            color: white;
-            height: 100vh;
-            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e1e2f, #27293d);
+            font-family: Arial, sans-serif;
+            color: #fff;
+            text-align: center;
         }
 
-        header {
-            text-align: center;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 2em;
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
         }
 
         .links {
-            text-align: center;
-            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .home-button {
-            background-color: #333;
-            color: white;
-            font-weight: bold;
-            padding: 10px;
-            font-size: 1em;
-            border: 2px solid #111;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: auto;
-        }
-
-        button {
-            background-color: #333;
-            color: white;
-            font-weight: bold;
+        .link {
+            text-decoration: none;
+            font-size: 1.2rem;
+            color: #fff;
+            background: #3b3b56;
             padding: 15px 30px;
-            font-size: 1.2em;
-            border: 2px solid #111;
             border-radius: 10px;
-            margin: 10px 0;
-            cursor: pointer;
-            display: block;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
+            transition: all 0.3s;
         }
 
-        @media (max-width: 600px) {
-            header {
-                font-size: 1.5em;
-            }
+        .link:hover {
+            background: #575b78;
+            transform: scale(1.05);
+        }
 
-            button {
-                padding: 10px 20px;
-                font-size: 1em;
-            }
+        .link:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
-
 <body>
-
-    <header>
-        <h1>Links</h1>
-    </header>
-
-    <!-- Замена img на video -->
-    <video width="500" height="300" controls>
-        <source src="animation.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
+    <h1>Твой Никнейм</h1>
     <div class="links">
-        <button onclick="window.location.href='https://t.me/t0dd15'">Telegram</button>
-        
-        <button onclick="copyToClipboard('t0dd15#1234')">Discord</button>
-    
+        <a href="https://t.me/yourusername" class="link" target="_blank">Telegram</a>
+        <a href="https://steamcommunity.com/id/yoursteamid" class="link" target="_blank">Steam</a>
+        <a href="https://discord.com/invite/yourdiscordinvite" class="link" target="_blank">Discord</a>
     </div>
-
-    <script>
-        function copyToClipboard(text) {
-            const tempInput = document.createElement('input');
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            alert('Copied to clipboard: ' + text);
-        }
-    </script>
 </body>
-
 </html>
