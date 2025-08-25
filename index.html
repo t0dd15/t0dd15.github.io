@@ -3,119 +3,251 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Градиентный ник — Minecraft</title>
-<!-- Пиксельный Minecraft-шрифт -->
+<title>Меню — Retro (Windows 95)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#0f1221; --card:#151935; --text:#e7e9ff; --muted:#a7afd9; }
-  *{box-sizing:border-box}
+  /* ===== Windows 95 palette / layout ===== */
+  :root{
+    --win95-bg:#008080;          /* рабочий стол */
+    --win95-face:#C0C0C0;        /* серый фон окон */
+    --win95-dk:#808080;          /* тёмная грань */
+    --win95-lt:#FFFFFF;          /* светлая грань */
+    --win95-shadow:#404040;      /* тень */
+    --win95-text:#000;
+    --title-active:#000080;      /* синий заголовка */
+    --title-inactive:#808080;
+    --title-text:#fff;
+  }
+  html,body{height:100%}
   body{
-    margin:0; min-height:100vh;
-    display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(1200px 600px at 10% 10%, #1a2050 0%, #0f1221 60%) no-repeat var(--bg);
-    font-family: 'Press Start 2P', monospace; /* ← теперь Minecraft стиль */
-    color:var(--text); padding:24px;
+    margin:0;
+    background:
+      linear-gradient(0deg, rgba(0,0,0,.25), rgba(0,0,0,.25)) 0 0/2px 2px,
+      var(--win95-bg);
+    image-rendering: pixelated;
+    font-family: "MS Sans Serif", Tahoma, "Press Start 2P", system-ui, sans-serif;
+    color:var(--win95-text);
+    cursor: url('data:image/svg+xml;utf8,\
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24">\
+        <polygon points="0,0 0,16 4,12 7,22 10,21 7,12 12,12" fill="black"/>\
+        <polygon points="1,2 1,14 4,11 7,21 9,20 6,11 11,11" fill="white"/>\
+      </svg>') 1 1, default;
   }
-  .app{width:min(100%,1000px)}
-  .grid{display:grid; gap:16px; grid-template-columns: 1.1fr .9fr}
-  @media (max-width:900px){ .grid{grid-template-columns:1fr} }
-  .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-        border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:18px; backdrop-filter: blur(6px)}
-  label{font-size:13px; color:var(--muted); display:block; margin-bottom:6px}
-  input[type="text"],select,input[type="number"],input[type="range"]{
-    width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
-    background:#0f132b; color:#e7e9ff; outline:none; font-size:14px;
+  .desktop{
+    min-height:100%;
+    padding:32px;
+    display:grid;
+    place-items:center;
   }
-  .row{display:flex; gap:12px; align-items:center}
-  .row>*{flex:1}
-  .btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
-  button{border:1px solid rgba(255,255,255,.14); background:#10163a; color:#fff; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600}
-  .out{font-family:monospace; background:#0f132b; border:1px dashed rgba(255,255,255,.14); border-radius:10px; padding:10px; font-size:13px; word-break:break-all}
-  .preview{display:flex; align-items:center; justify-content:center; min-height:200px; border-radius:12px; background:var(--card); overflow:auto}
+
+  /* ===== Window (“error” box) ===== */
+  .win{
+    width:min(520px, 95vw);
+    background:var(--win95-face);
+    border:2px solid var(--win95-shadow);
+    box-shadow: 2px 2px 0 var(--win95-dk),
+                -1px -1px 0 var(--win95-lt),
+                8px 8px 0 rgba(0,0,0,.25);
+    position:relative;
+    user-select:none;
+  }
+  .titlebar{
+    height:26px; display:flex; align-items:center; gap:8px;
+    background:linear-gradient(90deg, #000080 0%, #1084d0 100%);
+    color:var(--title-text); padding:0 6px;
+    font-weight:700; font-size:13px;
+    -webkit-font-smoothing: none;
+    cursor:move;
+  }
+  .titlebar .btn{
+    margin-left:auto; display:flex; gap:6px;
+  }
+  .tb-btn{
+    width:18px; height:18px; background:var(--win95-face);
+    box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
+    border:1px solid var(--win95-shadow); display:grid; place-items:center; cursor:pointer;
+  }
+  .tb-btn:active{
+    box-shadow: inset 1px 1px 0 var(--win95-dk), inset -1px -1px 0 var(--win95-lt);
+  }
+
+  .win-body{ display:flex; gap:12px; padding:16px 14px 12px; align-items:flex-start }
+  .icon{
+    width:36px; height:36px; flex:0 0 36px; margin-top:2px;
+    background:
+      radial-gradient(circle at 30% 30%, #ff0000 0 35%, #a00000 36% 70%, transparent 0) no-repeat,
+      radial-gradient(circle at 64% 64%, #ff8080 0 20%, transparent 21%) no-repeat;
+    border:1px solid #700; box-shadow: inset 1px 1px 0 #fcc;
+  }
+  .msg{
+    font-size:14px; line-height:1.3;
+  }
+  .hr{ height:2px; background:var(--win95-face); box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt); margin:8px 0 10px; }
+
+  /* ===== 95-style button ===== */
+  .btn95{
+    padding:6px 18px; font-size:13px; background:var(--win95-face);
+    border:1px solid var(--win95-shadow);
+    box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
+    cursor:pointer; min-width:110px;
+  }
+  .btn95:active{
+    box-shadow: inset 1px 1px 0 var(--win95-dk), inset -1px -1px 0 var(--win95-lt);
+    padding-top:7px; padding-left:19px; padding-bottom:5px; padding-right:17px;
+  }
+  .actions{ display:flex; gap:10px; justify-content:flex-end; padding:0 14px 14px }
+
+  /* stack of windows */
+  .stack{ display:grid; gap:22px }
+  @media (max-width:720px){ .stack{ gap:16px } }
+
+  /* links inside error window */
+  .link-block{
+    display:flex; gap:12px; flex-wrap:wrap; margin-top:8px;
+  }
+  .small{ font-size:12px; color:#333 }
+  a{ color:#000; text-decoration:none }
+  a:focus-visible{ outline:2px dashed #000; outline-offset:2px }
+
+  /* draggable hint */
+  .drag-hint{ position:absolute; top:-18px; left:0; right:0; text-align:center; font-size:11px; color:#fff8; }
 </style>
 </head>
 <body>
-<div class="app">
-  <h1>Градиентный ник (Minecraft)</h1>
-
-  <div class="grid">
-    <section class="card">
-      <label for="nick">Никнейм</label>
-      <input id="nick" type="text" value="StevePro" placeholder="Например, StevePro" />
-
-      <div class="row" style="margin-top:10px">
-        <div><label for="c1">Цвет 1</label><input id="c1" type="color" value="#6ea8fe"></div>
-        <div><label for="c2">Цвет 2</label><input id="c2" type="color" value="#c77dff"></div>
-        <div><label for="c3">Цвет 3</label><input id="c3" type="color" value="#ffb86b"></div>
+  <div class="desktop">
+    <div class="stack">
+      <!-- Window 1: Создание градиентов -->
+      <div class="win" data-link="/gradients/">
+        <div class="titlebar">
+          Ошибка
+          <div class="btn">
+            <div class="tb-btn" title="Свернуть">–</div>
+            <div class="tb-btn" title="Развернуть">□</div>
+            <div class="tb-btn" title="Закрыть">×</div>
+          </div>
+        </div>
+        <div class="win-body">
+          <div class="icon" aria-hidden="true"></div>
+          <div class="msg">
+            <b>Создание Minecraft-градиентов</b><br>
+            Произошла загадочная удача: найден лучший генератор RGB-ника!<br>
+            <div class="hr"></div>
+            <div class="link-block small">Нажми <i>OK</i>, чтобы открыть инструмент.</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn95 action-open">OK</button>
+          <button class="btn95 action-cancel">Отмена</button>
+        </div>
       </div>
 
-      <div class="row" style="margin-top:10px">
-        <div><label for="size">Размер (px)</label><input id="size" type="number" min="16" max="220" value="96"></div>
-        <div><label for="stroke">Обводка (px)</label><input id="stroke" type="number" min="0" max="8" value="0"></div>
+      <!-- Window 2: Полезные ссылки и программы -->
+      <div class="win" data-link="/links.html">
+        <div class="titlebar">
+          Ошибка
+          <div class="btn">
+            <div class="tb-btn">–</div>
+            <div class="tb-btn">□</div>
+            <div class="tb-btn">×</div>
+          </div>
+        </div>
+        <div class="win-body">
+          <div class="icon" aria-hidden="true" style="background:
+            radial-gradient(circle at 30% 30%, #ffbf00 0 35%, #a07a00 36% 70%, transparent 0) no-repeat,
+            radial-gradient(circle at 64% 64%, #ffe680 0 20%, transparent 21%) no-repeat; border-color:#765400"></div>
+          <div class="msg">
+            <b>Полезные ссылки и программы</b><br>
+            Сборник ресурсов для сервера и клиента. Проверено временем.<br>
+            <div class="hr"></div>
+            <div class="link-block small">Жми <i>OK</i>, чтобы перейти к списку.</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn95 action-open">OK</button>
+          <button class="btn95 action-cancel">Отмена</button>
+        </div>
       </div>
-    </section>
 
-    <section class="card">
-      <div class="preview">
-        <!-- SVG-превью -->
-        <svg id="svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="220" viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <!-- Градиент слева направо -->
-            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop id="s1" offset="0%" stop-color="#6ea8fe"/>
-              <stop id="s2" offset="50%" stop-color="#c77dff"/>
-              <stop id="s3" offset="100%" stop-color="#ffb86b"/>
-            </linearGradient>
-          </defs>
-          <text id="svgText" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-                font-size="96" font-weight="800" fill="url(#grad)">StevePro</text>
-        </svg>
+      <!-- Window 3: Обо мне -->
+      <div class="win" data-link="/about.html">
+        <div class="titlebar">
+          Ошибка
+          <div class="btn">
+            <div class="tb-btn">–</div>
+            <div class="tb-btn">□</div>
+            <div class="tb-btn">×</div>
+          </div>
+        </div>
+        <div class="win-body">
+          <div class="icon" aria-hidden="true" style="background:
+            radial-gradient(circle at 30% 30%, #00cc66 0 35%, #008844 36% 70%, transparent 0) no-repeat,
+            radial-gradient(circle at 64% 64%, #88ffcc 0 20%, transparent 21%) no-repeat; border-color:#0a6a3f"></div>
+          <div class="msg">
+            <b>Обо мне</b><br>
+            Коротко о том, кто я, чем занимаюсь и как связаться.<br>
+            <div class="hr"></div>
+            <div class="link-block small">Нажми <i>OK</i> — и привет из 1995!</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn95 action-open">OK</button>
+          <button class="btn95 action-cancel">Отмена</button>
+        </div>
       </div>
-
-      <div class="btns">
-        <button id="copyMini">Скопировать MiniMessage</button>
-        <button id="copyLegacy">Скопировать §x-hex</button>
-      </div>
-    </section>
+    </div>
   </div>
-
-  <div class="grid" style="grid-template-columns:1fr 1fr; margin-top:16px">
-    <section class="card"><label>MiniMessage</label><div id="miniOut" class="out"></div></section>
-    <section class="card"><label>§x-hex</label><div id="legacyOut" class="out"></div></section>
-  </div>
-</div>
 
 <script>
-const $=s=>document.querySelector(s);
-const nick=$('#nick'),c1=$('#c1'),c2=$('#c2'),c3=$('#c3'),size=$('#size'),stroke=$('#stroke');
-const svgText=$('#svgText'),s1=$('#s1'),s2=$('#s2'),s3=$('#s3'),miniOut=$('#miniOut'),legacyOut=$('#legacyOut');
+/* клик по окну/кнопке OK → переход */
+document.querySelectorAll('.win').forEach(win=>{
+  const url = win.getAttribute('data-link');
+  win.addEventListener('dblclick', ()=>location.href = url);
+  win.querySelectorAll('.action-open').forEach(btn=>btn.addEventListener('click', ()=>location.href = url));
+  win.querySelectorAll('.action-cancel').forEach(btn=>btn.addEventListener('click', ()=>{
+    // имитация закрытия: лёгкое "смятие"
+    win.style.transform = 'scale(0.98)';
+    setTimeout(()=>win.style.transform='none',120);
+  }));
+});
 
-function hexToRgb(h){const m=h.replace('#','');return{r:parseInt(m.slice(0,2),16),g:parseInt(m.slice(2,4),16),b:parseInt(m.slice(4,6),16)}}
-function rgbToHex({r,g,b}){return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase()}
-function lerp(a,b,t){return a+(b-a)*t}
-function lerpRgb(a,b,t){return {r:Math.round(lerp(a.r,b.r,t)),g:Math.round(lerp(a.g,b.g,t)),b:Math.round(lerp(a.b,b.b,t))}}
-function splitChars(str){return Array.from(str)}
-function threeColorGradientColorAt(t,h1,h2,h3){const A=hexToRgb(h1),B=hexToRgb(h2),C=hexToRgb(h3);if(t<=0.5)return rgbToHex(lerpRgb(A,B,t/0.5));return rgbToHex(lerpRgb(B,C,(t-0.5)/0.5))}
-function buildLegacyPerChar(str,h1,h2,h3){const chars=splitChars(str).filter(ch=>ch!=='\n');const N=Math.max(1,chars.length-1);let out='',idx=0;for(const ch of splitChars(str)){if(ch==='\n'){out+='\n';continue;}const t=N===0?0:idx/N;const hex=threeColorGradientColorAt(t,h1,h2,h3);const seq='§x'+hex.slice(1).split('').map(n=>'§'+n).join('');out+=seq+ch;idx++;}return out}
+/* простое перетаскивание за titlebar (без выхода за экран) */
+document.querySelectorAll('.win').forEach(win=>{
+  const bar = win.querySelector('.titlebar');
+  let sx=0, sy=0, ox=0, oy=0, dragging=false;
 
-function update(){
-  const text=nick.value||' ';
-  const h1=c1.value.toUpperCase(),h2=c2.value.toUpperCase(),h3=c3.value.toUpperCase();
-  svgText.textContent=text;
-  svgText.setAttribute('font-size',Math.max(16,Math.min(220,parseInt(size.value)||96)));
-  svgText.setAttribute('style',`font-family:'Press Start 2P', monospace;font-weight:800`);
-  const sw=Math.max(0,Math.min(8,parseInt(stroke.value)||0));
-  if(sw){svgText.setAttribute('stroke','black');svgText.setAttribute('stroke-width',sw);svgText.setAttribute('paint-order','stroke fill');}
-  else{svgText.removeAttribute('stroke');svgText.removeAttribute('stroke-width');}
-  s1.setAttribute('stop-color',h1);s2.setAttribute('stop-color',h2);s3.setAttribute('stop-color',h3);
-  miniOut.textContent=`<gradient:${h1}:${h2}:${h3}>${text}</gradient>`;
-  legacyOut.textContent=buildLegacyPerChar(text,h1,h2,h3);
-}
-[nick,c1,c2,c3,size,stroke].forEach(el=>el.addEventListener('input',update));
-update();
+  const start = (e)=>{
+    dragging=true;
+    const p = ('touches' in e)? e.touches[0] : e;
+    sx = p.clientX; sy = p.clientY;
+    const rect = win.getBoundingClientRect();
+    ox = rect.left; oy = rect.top;
+    win.style.position='absolute';
+    win.style.left = ox+'px'; win.style.top = oy+'px';
+    win.style.right = 'auto'; win.style.bottom='auto';
+    win.style.zIndex = String(Date.now()); // bring to front
+    e.preventDefault();
+  };
+  const move = (e)=>{
+    if(!dragging) return;
+    const p = ('touches' in e)? e.touches[0] : e;
+    const nx = ox + (p.clientX - sx);
+    const ny = oy + (p.clientY - sy);
+    // ограничение в пределах окна
+    const maxX = window.innerWidth - win.offsetWidth;
+    const maxY = window.innerHeight - win.offsetHeight;
+    win.style.left = Math.max(0, Math.min(nx, maxX)) + 'px';
+    win.style.top  = Math.max(0, Math.min(ny, maxY)) + 'px';
+  };
+  const end = ()=>{ dragging=false; };
 
-$('#copyMini').addEventListener('click',()=>navigator.clipboard.writeText(miniOut.textContent));
-$('#copyLegacy').addEventListener('click',()=>navigator.clipboard.writeText(legacyOut.textContent));
+  bar.addEventListener('mousedown', start);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  bar.addEventListener('touchstart', start, {passive:false});
+  window.addEventListener('touchmove', move, {passive:false});
+  window.addEventListener('touchend', end);
+});
 </script>
 </body>
 </html>
