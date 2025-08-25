@@ -3,119 +3,499 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Градиентный ник — Minecraft</title>
-<!-- Пиксельный Minecraft-шрифт -->
+<title>Minecraft RGB — твой стиль</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#0f1221; --card:#151935; --text:#e7e9ff; --muted:#a7afd9; }
+  :root{
+    --bg:#0c0f1e; --panel:#121636; --muted:#9aa3d5; --text:#eaf0ff;
+    --accent:#78a6ff; --line:rgba(255,255,255,.1);
+  }
   *{box-sizing:border-box}
+  html,body{height:100%}
   body{
-    margin:0; min-height:100vh;
-    display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(1200px 600px at 10% 10%, #1a2050 0%, #0f1221 60%) no-repeat var(--bg);
-    font-family: 'Press Start 2P', monospace; /* ← теперь Minecraft стиль */
-    color:var(--text); padding:24px;
+    margin:0; background:
+      radial-gradient(1200px 600px at 10% 10%, #1a2050 0%, transparent 60%) no-repeat,
+      radial-gradient(1000px 500px at 90% 20%, #22285f 0%, transparent 60%) no-repeat,
+      var(--bg);
+    color:var(--text);
+    font-family:'Press Start 2P', monospace;
   }
-  .app{width:min(100%,1000px)}
-  .grid{display:grid; gap:16px; grid-template-columns: 1.1fr .9fr}
-  @media (max-width:900px){ .grid{grid-template-columns:1fr} }
-  .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-        border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:18px; backdrop-filter: blur(6px)}
-  label{font-size:13px; color:var(--muted); display:block; margin-bottom:6px}
-  input[type="text"],select,input[type="number"],input[type="range"]{
-    width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
-    background:#0f132b; color:#e7e9ff; outline:none; font-size:14px;
+  .wrap{max-width:1200px; margin:0 auto; padding:18px}
+  h1{font-size:18px; margin:0 0 14px}
+  .grid{display:grid; grid-template-columns: 330px 1fr 380px; gap:14px}
+  @media (max-width:1100px){ .grid{grid-template-columns:1fr} }
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid var(--line); border-radius:14px; padding:14px; backdrop-filter: blur(6px);
   }
-  .row{display:flex; gap:12px; align-items:center}
+  .sectionTitle{font-size:12px; color:var(--muted); margin:0 0 10px}
+  label{font-size:11px; color:var(--muted); display:block; margin:6px 0 6px}
+  input[type="text"], input[type="number"], select, textarea{
+    width:100%; background:#0f1330; border:1px solid var(--line); color:var(--text);
+    border-radius:10px; padding:10px 12px; font-family:inherit; font-size:12px; outline:none;
+  }
+  input[type="color"]{appearance:none; width:100%; height:40px; border-radius:10px; border:1px solid var(--line); background:#0f1330}
+  .row{display:flex; gap:10px; align-items:center}
   .row>*{flex:1}
-  .btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
-  button{border:1px solid rgba(255,255,255,.14); background:#10163a; color:#fff; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600}
-  .out{font-family:monospace; background:#0f132b; border:1px dashed rgba(255,255,255,.14); border-radius:10px; padding:10px; font-size:13px; word-break:break-all}
-  .preview{display:flex; align-items:center; justify-content:center; min-height:200px; border-radius:12px; background:var(--card); overflow:auto}
+  .btn{background:#10163a; border:1px solid var(--line); color:var(--text); padding:10px 12px; border-radius:10px; cursor:pointer}
+  .btn:active{transform:translateY(1px)}
+  .chips{display:flex; flex-wrap:wrap; gap:8px}
+  .chip{padding:8px 10px; border:1px solid var(--line); border-radius:8px; cursor:pointer; background:#0f1330; font-size:11px}
+  .chip.active{outline:2px solid var(--accent)}
+  .preview{
+    min-height:220px; display:flex; align-items:center; justify-content:center; border-radius:12px; background:#151a40; position:relative; overflow:auto;
+  }
+  .nick{font-weight:700; font-size:48px; white-space:pre-wrap; text-align:center}
+  .options{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .colors{display:grid; gap:10px}
+  .colorRow{display:grid; grid-template-columns:1fr 110px auto; gap:8px; align-items:center}
+  .link{color:var(--accent); text-decoration:none}
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px}
+  .tabs{display:flex; gap:8px; margin-bottom:10px}
+  .tab{padding:8px 10px; border:1px solid var(--line); background:#0f1330; border-radius:8px; cursor:pointer; font-size:11px}
+  .tab.active{outline:2px solid var(--accent)}
+  .out{min-height:110px; background:#0f1330; border:1px dashed var(--line); border-radius:10px; padding:10px; word-break:break-all}
+  .hr{height:1px; background:var(--line); margin:10px 0}
+  small{color:var(--muted)}
 </style>
 </head>
 <body>
-<div class="app">
-  <h1>Градиентный ник (Minecraft)</h1>
-
+<div class="wrap">
+  <h1>Minecraft RGB Gradient — custom</h1>
   <div class="grid">
+    <!-- LEFT: controls -->
     <section class="card">
-      <label for="nick">Никнейм</label>
-      <input id="nick" type="text" value="StevePro" placeholder="Например, StevePro" />
+      <p class="sectionTitle">Ввод</p>
+      <label>Текст</label>
+      <textarea id="text" rows="3" placeholder="Type here to generate a gradient!">Birdflop</textarea>
 
-      <div class="row" style="margin-top:10px">
-        <div><label for="c1">Цвет 1</label><input id="c1" type="color" value="#6ea8fe"></div>
-        <div><label for="c2">Цвет 2</label><input id="c2" type="color" value="#c77dff"></div>
-        <div><label for="c3">Цвет 3</label><input id="c3" type="color" value="#ffb86b"></div>
+      <div class="hr"></div>
+      <p class="sectionTitle">Цвета</p>
+      <div id="colors" class="colors"></div>
+      <div class="chips" style="margin-top:6px">
+        <button id="addColor" class="chip">+ стоп</button>
+        <button id="removeColor" class="chip">– стоп</button>
+        <button id="reverseColors" class="chip">↔ реверс</button>
+        <button id="presetsBtn" class="chip">🎨 пресеты</button>
       </div>
 
-      <div class="row" style="margin-top:10px">
-        <div><label for="size">Размер (px)</label><input id="size" type="number" min="16" max="220" value="96"></div>
-        <div><label for="stroke">Обводка (px)</label><input id="stroke" type="number" min="0" max="8" value="0"></div>
+      <div class="hr"></div>
+      <p class="sectionTitle">Параметры</p>
+      <div class="options">
+        <div>
+          <label>Режим распределения</label>
+          <select id="mode">
+            <option value="even" selected>Всегда равномерно (disperse)</option>
+            <option value="map">По «карте» (по количеству символов)</option>
+          </select>
+        </div>
+        <div>
+          <label>Символов на цвет (для режима «карта»)</label>
+          <input id="charsPerColor" type="number" min="1" value="2">
+        </div>
+        <div>
+          <label>Приводить HEX к нижнему регистру</label>
+          <select id="lower">
+            <option value="no" selected>Нет</option>
+            <option value="yes">Да</option>
+          </select>
+        </div>
+        <div>
+          <label>Обрезать пробелы из раскраски</label>
+          <select id="trim">
+            <option value="yes" selected>Да</option>
+            <option value="no">Нет</option>
+          </select>
+        </div>
+        <div>
+          <label>Тень текста (JSON превью)</label>
+          <select id="shadow">
+            <option value="no" selected>Нет</option>
+            <option value="yes">Да</option>
+          </select>
+        </div>
+        <div>
+          <label>Размер предпросмотра (px)</label>
+          <input id="size" type="number" min="16" max="160" value="72">
+        </div>
       </div>
+
+      <div class="hr"></div>
+      <p class="sectionTitle">Форматирование</p>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="bold"> &l Bold</label>
+        <label class="chip"><input type="checkbox" id="italic"> &o Italic</label>
+        <label class="chip"><input type="checkbox" id="under"> &n Underline</label>
+        <label class="chip"><input type="checkbox" id="strike"> &m Strike</label>
+        <label class="chip"><input type="checkbox" id="obf"> &k Obf</label>
+      </div>
+
+      <div class="hr"></div>
+      <p class="sectionTitle">Пре-/Суффикс</p>
+      <div class="row">
+        <div>
+          <label>Префикс</label>
+          <input id="prefix" type="text" placeholder="например, [&aVIP] ">
+        </div>
+        <div>
+          <label>Суффикс</label>
+          <input id="suffix" type="text" placeholder=" например, &7#1">
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <p class="sectionTitle">Пресеты</p>
+      <div class="row">
+        <button id="savePreset" class="btn">Сохранить</button>
+        <button id="loadPreset" class="btn">Загрузить</button>
+        <button id="copyUrl" class="btn">Ссылка</button>
+      </div>
+      <small>Пресеты хранятся в localStorage; «Ссылка» кодирует настройки в URL.</small>
     </section>
 
+    <!-- MIDDLE: preview -->
     <section class="card">
+      <p class="sectionTitle">Предпросмотр</p>
       <div class="preview">
-        <!-- SVG-превью -->
-        <svg id="svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="220" viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <!-- Градиент слева направо -->
-            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop id="s1" offset="0%" stop-color="#6ea8fe"/>
-              <stop id="s2" offset="50%" stop-color="#c77dff"/>
-              <stop id="s3" offset="100%" stop-color="#ffb86b"/>
-            </linearGradient>
-          </defs>
-          <text id="svgText" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-                font-size="96" font-weight="800" fill="url(#grad)">StevePro</text>
-        </svg>
+        <div id="preview" class="nick">Birdflop</div>
       </div>
-
-      <div class="btns">
-        <button id="copyMini">Скопировать MiniMessage</button>
-        <button id="copyLegacy">Скопировать §x-hex</button>
-      </div>
+      <small>Градиент слева → направо. Шрифт — пиксельный Minecraft-стайл.</small>
     </section>
-  </div>
 
-  <div class="grid" style="grid-template-columns:1fr 1fr; margin-top:16px">
-    <section class="card"><label>MiniMessage</label><div id="miniOut" class="out"></div></section>
-    <section class="card"><label>§x-hex</label><div id="legacyOut" class="out"></div></section>
+    <!-- RIGHT: outputs -->
+    <section class="card">
+      <p class="sectionTitle">Вывод</p>
+      <div class="tabs">
+        <button class="tab active" data-tab="mini">MiniMessage</button>
+        <button class="tab" data-tab="json">JSON</button>
+        <button class="tab" data-tab="sec">§x</button>
+        <button class="tab" data-tab="amp">&x</button>
+        <button class="tab" data-tab="sharp"><#rrggbb></button>
+        <button class="tab" data-tab="custom">Custom</button>
+      </div>
+      <div id="out" class="out mono"></div>
+      <div class="row" style="margin-top:10px">
+        <button id="copy" class="btn">Скопировать</button>
+        <button id="decode" class="btn">Decode (эксп.)</button>
+      </div>
+
+      <div class="hr"></div>
+      <p class="sectionTitle">Custom-шаблон</p>
+      <textarea id="customTpl" rows="4" class="mono" placeholder='{"color":"[COLOR=#$1$2$3$4$5$6]$c[/COLOR]","bold":"[B]$t[/B]"}'></textarea>
+      <small>Плейсхолдеры: <code>$t</code> — текст; <code>$c</code> — символ; <code>$1..$6</code> — HEX по цифрам. Для § используйте <code>"char":"§"</code>.</small>
+    </section>
   </div>
 </div>
 
 <script>
-const $=s=>document.querySelector(s);
-const nick=$('#nick'),c1=$('#c1'),c2=$('#c2'),c3=$('#c3'),size=$('#size'),stroke=$('#stroke');
-const svgText=$('#svgText'),s1=$('#s1'),s2=$('#s2'),s3=$('#s3'),miniOut=$('#miniOut'),legacyOut=$('#legacyOut');
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 
-function hexToRgb(h){const m=h.replace('#','');return{r:parseInt(m.slice(0,2),16),g:parseInt(m.slice(2,4),16),b:parseInt(m.slice(4,6),16)}}
-function rgbToHex({r,g,b}){return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase()}
-function lerp(a,b,t){return a+(b-a)*t}
-function lerpRgb(a,b,t){return {r:Math.round(lerp(a.r,b.r,t)),g:Math.round(lerp(a.g,b.g,t)),b:Math.round(lerp(a.b,b.b,t))}}
-function splitChars(str){return Array.from(str)}
-function threeColorGradientColorAt(t,h1,h2,h3){const A=hexToRgb(h1),B=hexToRgb(h2),C=hexToRgb(h3);if(t<=0.5)return rgbToHex(lerpRgb(A,B,t/0.5));return rgbToHex(lerpRgb(B,C,(t-0.5)/0.5))}
-function buildLegacyPerChar(str,h1,h2,h3){const chars=splitChars(str).filter(ch=>ch!=='\n');const N=Math.max(1,chars.length-1);let out='',idx=0;for(const ch of splitChars(str)){if(ch==='\n'){out+='\n';continue;}const t=N===0?0:idx/N;const hex=threeColorGradientColorAt(t,h1,h2,h3);const seq='§x'+hex.slice(1).split('').map(n=>'§'+n).join('');out+=seq+ch;idx++;}return out}
+/* ====== state ====== */
+const state = {
+  colors: ['#54DAF4','#54C8EB','#54B7E2','#54A5D9'],
+  mode: 'even', // 'even' | 'map'
+  charsPerColor: 2,
+  lower:false, trim:true, shadow:false,
+  size:72, fmt:'mini',
+  flags:{bold:false, italic:false, under:false, strike:false, obf:false},
+  prefix:'', suffix:'',
+  text:'Birdflop',
+  customTpl:''
+};
 
-function update(){
-  const text=nick.value||' ';
-  const h1=c1.value.toUpperCase(),h2=c2.value.toUpperCase(),h3=c3.value.toUpperCase();
-  svgText.textContent=text;
-  svgText.setAttribute('font-size',Math.max(16,Math.min(220,parseInt(size.value)||96)));
-  svgText.setAttribute('style',`font-family:'Press Start 2P', monospace;font-weight:800`);
-  const sw=Math.max(0,Math.min(8,parseInt(stroke.value)||0));
-  if(sw){svgText.setAttribute('stroke','black');svgText.setAttribute('stroke-width',sw);svgText.setAttribute('paint-order','stroke fill');}
-  else{svgText.removeAttribute('stroke');svgText.removeAttribute('stroke-width');}
-  s1.setAttribute('stop-color',h1);s2.setAttribute('stop-color',h2);s3.setAttribute('stop-color',h3);
-  miniOut.textContent=`<gradient:${h1}:${h2}:${h3}>${text}</gradient>`;
-  legacyOut.textContent=buildLegacyPerChar(text,h1,h2,h3);
+/* ====== UI build: colors ====== */
+const colorsEl = $('#colors');
+function rebuildColors(){
+  colorsEl.innerHTML='';
+  state.colors.forEach((hex,i)=>{
+    const row = document.createElement('div');
+    row.className='colorRow';
+    row.innerHTML = `
+      <input type="color" value="${hex}">
+      <input type="text" value="${hex}" class="mono" />
+      <button class="btn" data-del="${i}">✕</button>
+    `;
+    const [pc,pt,btn] = row.children;
+    pc.addEventListener('input', e=>{ state.colors[i]=e.target.value; pt.value=e.target.value; update(); });
+    pt.addEventListener('input', e=>{
+      const v=e.target.value; if(/^#?[0-9a-fA-F]{0,6}$/.test(v.replace('#',''))){ state.colors[i] = v.startsWith('#')?v:('#'+v); pc.value=state.colors[i]; update(); }
+    });
+    btn.addEventListener('click', ()=>{ if(state.colors.length>2){ state.colors.splice(i,1); rebuildColors(); update(); } });
+    colorsEl.appendChild(row);
+  });
 }
-[nick,c1,c2,c3,size,stroke].forEach(el=>el.addEventListener('input',update));
-update();
+$('#addColor').onclick=()=>{ state.colors.push('#'+Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0')); rebuildColors(); update(); };
+$('#removeColor').onclick=()=>{ if(state.colors.length>2){ state.colors.pop(); rebuildColors(); update(); } };
+$('#reverseColors').onclick=()=>{ state.colors.reverse(); rebuildColors(); update(); };
+$('#presetsBtn').onclick=()=>{
+  // простые пресеты
+  const presets = {
+    Sunset:['#ff7e5f','#feb47b','#ffd56b'],
+    Ocean:['#00c6ff','#0072ff'],
+    Ender:['#3a1c71','#d76d77','#ffaf7b'],
+    LimeCandy:['#A8FF78','#78FFD6'],
+    RGB:['#FF0000','#00FF00','#0000FF']
+  };
+  const keys=Object.keys(presets);
+  const pick = prompt('Выбери пресет:\n'+keys.join(', '));
+  if(!pick || !presets[pick]) return;
+  state.colors=[...presets[pick]]; rebuildColors(); update();
+};
 
-$('#copyMini').addEventListener('click',()=>navigator.clipboard.writeText(miniOut.textContent));
-$('#copyLegacy').addEventListener('click',()=>navigator.clipboard.writeText(legacyOut.textContent));
+/* ====== inputs ====== */
+$('#text').oninput=e=>{ state.text=e.target.value; update(); };
+$('#mode').onchange=e=>{ state.mode=e.target.value; update(); };
+$('#charsPerColor').oninput=e=>{ state.charsPerColor=Math.max(1,parseInt(e.target.value||'1')); update(); };
+$('#lower').onchange=e=>{ state.lower=e.target.value==='yes'; update(); };
+$('#trim').onchange=e=>{ state.trim=e.target.value==='yes'; update(); };
+$('#shadow').onchange=e=>{ state.shadow=e.target.value==='yes'; update(); };
+$('#size').oninput=e=>{ state.size=Math.max(16,Math.min(160,parseInt(e.target.value||'72'))); update(); };
+$('#bold').onchange=e=>{ state.flags.bold=e.target.checked; update(); };
+$('#italic').onchange=e=>{ state.flags.italic=e.target.checked; update(); };
+$('#under').onchange=e=>{ state.flags.under=e.target.checked; update(); };
+$('#strike').onchange=e=>{ state.flags.strike=e.target.checked; update(); };
+$('#obf').onchange=e=>{ state.flags.obf=e.target.checked; update(); };
+$('#prefix').oninput=e=>{ state.prefix=e.target.value; update(); };
+$('#suffix').oninput=e=>{ state.suffix=e.target.value; update(); };
+
+$$('.tab').forEach(btn=>btn.onclick=()=>{
+  $$('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  state.fmt = btn.dataset.tab;
+  update();
+});
+$('#customTpl').oninput=e=>{ state.customTpl=e.target.value; update(); };
+
+/* ====== utils ====== */
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const hexToRgb=h=>({r:parseInt(h.slice(1,3),16), g:parseInt(h.slice(3,5),16), b:parseInt(h.slice(5,7),16)});
+const rgbToHex=({r,g,b})=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+const lerp=(a,b,t)=>a+(b-a)*t;
+const lerpRgb=(A,B,t)=>({r:Math.round(lerp(A.r,B.r,t)),g:Math.round(lerp(A.g,B.g,t)),b:Math.round(lerp(A.b,B.b,t))});
+const splitChars=str=>Array.from(str);
+
+/* piecewise gradient t in [0..1] across N stops */
+function gradientAt(t, stops){
+  if(stops.length===1) return stops[0];
+  const seg = 1/(stops.length-1);
+  const i = Math.min(stops.length-2, Math.floor(t/seg));
+  const localT = (t - i*seg)/seg;
+  const c = rgbToHex(lerpRgb(hexToRgb(stops[i]), hexToRgb(stops[i+1]), clamp(localT,0,1)));
+  return c;
+}
+
+/* build array of [char, hex] for text */
+function colorizeText(text, stops, mode, charsPerColor, trimSpaces){
+  const chars = splitChars(text);
+  const indices = trimSpaces ? chars.map((c,idx)=>c.trim()===''?null:idx).filter(i=>i!==null) : chars.map((_,i)=>i);
+  const count = indices.length || 1;
+
+  // mapping t for each visible char
+  const tmap = new Map();
+  if(mode==='map'){
+    // chunked per color (like "characters per color")
+    const per=charsPerColor;
+    indices.forEach((idx,k)=>{
+      const colorIndex = Math.floor(k/per);
+      const maxColorIndex = Math.max(0, count-1)/per; // approximate spread
+      const t = clamp((colorIndex)/Math.max(1,(stops.length-1)*(count/per)), 0, 1);
+      tmap.set(idx, t);
+    });
+  }else{
+    // even disperse across whole string
+    indices.forEach((idx,k)=>{
+      const t = (count===1)?0:(k/(count-1));
+      tmap.set(idx, t);
+    });
+  }
+
+  const result = chars.map((ch,i)=>{
+    const t = tmap.has(i) ? tmap.get(i) : null;
+    const hex = t===null ? null : gradientAt(t, stops);
+    return {ch, hex};
+  });
+  return result;
+}
+
+/* formatters */
+function maybeLower(h,lower){ return lower ? h.toLowerCase() : h; }
+function withFlags(text, flags, open=true){
+  if(!open) return text;
+  let pre=''; if(flags.bold) pre+='&l';
+  if(flags.italic) pre+='&o';
+  if(flags.under) pre+='&n';
+  if(flags.strike) pre+='&m';
+  if(flags.obf) pre+='&k';
+  return pre + text;
+}
+function fmtMini(colored, state){
+  // <gradient:#A:#B:...>TEXT</gradient> + флаги <> вокруг текста
+  const hexes = state.colors.map(h=>maybeLower(h,state.lower)).join(':');
+  const inner = withFlags(state.text, state.flags, true).replaceAll('<','&lt;').replaceAll('>','&gt;');
+  return `<gradient:${hexes}>${inner}</gradient>`;
+}
+function fmtJSON(colored, state){
+  // простой vanilla JSON (tellraw): массив компонентов [{text, color, bold, ...}]
+  const arr = [];
+  if(state.prefix) arr.push({text:state.prefix});
+  colored.forEach(({ch,hex})=>{
+    if(hex===null){ arr.push({text:ch}); return; }
+    const o = {text:ch, color: maybeLower(hex,state.lower).replace('#','')};
+    if(state.flags.bold) o.bold=true;
+    if(state.flags.italic) o.italic=true;
+    if(state.flags.under) o.underlined=true;
+    if(state.flags.strike) o.strikethrough=true;
+    if(state.flags.obf) o.obfuscated=true;
+    if(state.shadow) o.shadow=true; // не ванильное поле, но оставим как «hint»
+    arr.push(o);
+  });
+  if(state.suffix) arr.push({text:state.suffix});
+  return JSON.stringify(arr);
+}
+function toSec(hex){ const h=maybeLower(hex,true); return '§x' + h.slice(1).split('').map(n=>'§'+n).join(''); }
+function toAmp(hex){ const h=maybeLower(hex,true); return '&x' + h.slice(1).split('').map(n=>'&'+n).join(''); }
+function toSharp(hex){ return `<${maybeLower(hex,state.lower)}>`; }
+
+function fmtPerChar(colored, builder, state){
+  let out = state.prefix || '';
+  colored.forEach(({ch,hex})=>{
+    if(hex===null){ out+=ch; return; }
+    out += builder(maybeLower(hex,state.lower));
+    out += ch;
+  });
+  out += state.suffix || '';
+  // добавим формат-флаги как префиксные &l и т.п. (как в Birdflop)
+  if(state.flags.bold||state.flags.italic||state.flags.under||state.flags.strike||state.flags.obf){
+    const prefixFlags = withFlags('', state.flags, true);
+    out = prefixFlags + out;
+  }
+  return out;
+}
+
+/* decode experimental (tries to guess stops) — упрощённо */
+function decodeExperimental(str){
+  const hexes = (str.match(/#?[0-9a-fA-F]{6}/g)||[]).map(h=>h.startsWith('#')?h:('#'+h));
+  if(hexes.length>=2){ state.colors = [hexes[0], hexes[Math.floor(hexes.length/2)], hexes[hexes.length-1]]; rebuildColors(); update(); alert('Попробовал восстановить 3 стопа из текста.'); }
+  else alert('Не удалось распознать HEX.');
+}
+
+/* ====== preview render (CSS gradient on text) ====== */
+function renderPreview(colored){
+  const el = $('#preview');
+  el.textContent = state.text || ' ';
+  el.style.fontSize = state.size+'px';
+  // создаём линейный градиент слева->направо по количеству символов
+  const indices = colored.filter(x=>x.hex!==null);
+  if(indices.length===0){ el.style.background='none'; el.style.webkitBackgroundClip='initial'; el.style.color= 'var(--text)'; return; }
+  const parts = indices.map((obj,i)=>`${obj.hex} ${(i/(indices.length-1))*100}%`);
+  el.style.background = `linear-gradient(90deg, ${parts.join(',')})`;
+  el.style.webkitBackgroundClip='text';
+  el.style.backgroundClip='text';
+  el.style.color='transparent';
+}
+
+/* ====== export dispatcher ====== */
+function renderOutput(colored){
+  const out = $('#out');
+  const fmt = state.fmt;
+  if(fmt==='mini'){ out.textContent = fmtMini(colored, state); return; }
+  if(fmt==='json'){ out.textContent = fmtJSON(colored, state); return; }
+  if(fmt==='sec'){ out.textContent = fmtPerChar(colored, toSec, state); return; }
+  if(fmt==='amp'){ out.textContent = fmtPerChar(colored, toAmp, state); return; }
+  if(fmt==='sharp'){ out.textContent = fmtPerChar(colored, toSharp, state); return; }
+  if(fmt==='custom'){
+    try{
+      const obj = state.customTpl ? JSON.parse(state.customTpl) : {"color":"[COLOR=#$1$2$3$4$5$6]$c[/COLOR]","bold":"[B]$t[/B]","italic":"[I]$t[/I]"};
+      // строим по символам
+      let outStr = state.prefix || '';
+      colored.forEach(({ch,hex})=>{
+        if(hex===null){ outStr+=ch; return; }
+        const H = maybeLower(hex,state.lower).slice(1); // rrggbb
+        let seg = (obj.color||"$c").replaceAll('$c','').replaceAll('$1',H[0]).replaceAll('$2',H[1]).replaceAll('$3',H[2]).replaceAll('$4',H[3]).replaceAll('$5',H[4]).replaceAll('$6',H[5]);
+        outStr += seg + ch;
+      });
+      if(state.flags.bold && obj.bold) outStr = obj.bold.replaceAll('$t', outStr);
+      if(state.flags.italic && obj.italic) outStr = obj.italic.replaceAll('$t', outStr);
+      if(state.flags.under && obj.underline) outStr = obj.underline.replaceAll('$t', outStr);
+      if(state.flags.strike && obj.strikethrough) outStr = obj.strikethrough.replaceAll('$t', outStr);
+      if(state.flags.obf && obj.obfuscate) outStr = obj.obfuscate.replaceAll('$t', outStr);
+      out.textContent = outStr + (state.suffix||'');
+    }catch(e){
+      out.textContent = 'Ошибка парсинга custom JSON';
+    }
+  }
+}
+
+/* ====== presets (save/load/url) ====== */
+$('#savePreset').onclick=()=>{
+  const name = prompt('Имя пресета:'); if(!name) return;
+  const payload = JSON.stringify(state);
+  localStorage.setItem('rgb_preset_'+name, payload);
+  alert('Сохранено.');
+};
+$('#loadPreset').onclick=()=>{
+  const keys = Object.keys(localStorage).filter(k=>k.startsWith('rgb_preset_'));
+  if(keys.length===0){ alert('Нет пресетов'); return; }
+  const name = prompt('Доступные:\n'+keys.map(k=>k.replace('rgb_preset_','')).join(', ')+'\n\nИмя для загрузки:');
+  if(!name) return;
+  const data = localStorage.getItem('rgb_preset_'+name);
+  if(!data){ alert('Не найдено'); return; }
+  Object.assign(state, JSON.parse(data));
+  rebuildColors(); hydrateUI(); update();
+};
+$('#copyUrl').onclick=()=>{
+  const data = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+  const url = location.origin + location.pathname + '#cfg=' + data;
+  navigator.clipboard.writeText(url).then(()=>alert('Ссылка скопирована!'));
+};
+$('#decode').onclick=()=>{
+  const s = prompt('Вставь RGB-текст / HEX-последовательности для попытки декодирования:');
+  if(!s) return;
+  decodeExperimental(s);
+};
+/* boot from URL if present */
+(function bootFromUrl(){
+  const m = location.hash.match(/#cfg=([^&]+)/);
+  if(m){
+    try{
+      const data = JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+      Object.assign(state, data);
+    }catch(_){}
+  }
+})();
+
+/* ====== hydrate UI (flags etc) ====== */
+function hydrateUI(){
+  $('#text').value=state.text;
+  $('#mode').value=state.mode;
+  $('#charsPerColor').value=state.charsPerColor;
+  $('#lower').value=state.lower?'yes':'no';
+  $('#trim').value=state.trim?'yes':'no';
+  $('#shadow').value=state.shadow?'yes':'no';
+  $('#size').value=state.size;
+  $('#bold').checked=state.flags.bold;
+  $('#italic').checked=state.flags.italic;
+  $('#under').checked=state.flags.under;
+  $('#strike').checked=state.flags.strike;
+  $('#obf').checked=state.flags.obf;
+  $('#prefix').value=state.prefix;
+  $('#suffix').value=state.suffix;
+  $('#customTpl').value=state.customTpl||'';
+}
+
+/* ====== main update ====== */
+function update(){
+  // sanitize colors
+  state.colors = state.colors.map(h=>('#'+h.replace('#','')).slice(0,7).padEnd(7,'0'));
+  // build char colors
+  const colored = colorizeText(state.text, state.colors, state.mode, state.charsPerColor, state.trim);
+  renderPreview(colored);
+  renderOutput(colored);
+}
+rebuildColors(); hydrateUI(); update();
+
+/* copy out */
+$('#copy').onclick=()=>navigator.clipboard.writeText($('#out').textContent).then(()=>alert('Скопировано!'));
 </script>
 </body>
 </html>
