@@ -3,267 +3,221 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Градиент для ника — Minecraft</title>
+<title>Градиент для ника — 3 цвета</title>
 <style>
-  :root{
-    --bg:#0f1221; --card:#151935; --text:#e7e9ff; --muted:#a7afd9; --accent:#6ea8fe;
-  }
+  :root{ --bg:#0f1221; --card:#151935; --text:#e7e9ff; --muted:#a7afd9; }
   *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-    background: radial-gradient(1200px 600px at 10% 10%, #1a2050 0%, #0f1221 60%) no-repeat var(--bg);
-    color:var(--text); display:flex; align-items:center; justify-content:center; padding:24px;
-  }
-  .app{width:min(100%,980px)}
-  .grid{display:grid; gap:16px; grid-template-columns: 1.2fr .8fr}
-  @media (max-width:920px){ .grid{grid-template-columns:1fr} }
-  .card{
-    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:14px; padding:18px 16px; backdrop-filter: blur(6px);
-    box-shadow:0 10px 24px rgba(0,0,0,.35);
-  }
-  h1{margin:.2em 0 .6em; font-size:clamp(22px,3vw,30px)}
+  body{margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+       background:radial-gradient(1200px 600px at 10% 10%, #1a2050 0%, #0f1221 60%) no-repeat var(--bg);
+       font-family: Inter, system-ui, Arial, sans-serif; color:var(--text); padding:24px}
+  .app{width:min(100%,1000px)}
+  .grid{display:grid; gap:16px; grid-template-columns: 1.1fr .9fr}
+  @media (max-width:900px){ .grid{grid-template-columns:1fr} }
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+        border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:18px; backdrop-filter: blur(6px)}
   label{font-size:13px; color:var(--muted); display:block; margin-bottom:6px}
-  input[type="text"]{
-    width:100%; padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
-    background:#0f132b; color:var(--text); outline:none; font-size:16px;
+  input[type="text"],select,input[type="number"],input[type="range"]{
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
+    background:#0f132b; color:#e7e9ff; outline:none; font-size:14px;
   }
   .row{display:flex; gap:12px; align-items:center}
-  .row > *{flex:1}
-  .hint{font-size:12px; color:var(--muted); margin-top:6px}
-  select, input[type="number"], input[type="range"]{
-    width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
-    background:#0f132b; color:var(--text); outline:none; font-size:14px;
-  }
-  .preview{
-    display:flex; align-items:center; justify-content:center; text-align:center;
-    min-height:160px; border-radius:12px; background:var(--card); position:relative; overflow:hidden;
-  }
-  .nickname{
-    font-weight:800; font-size:clamp(36px,8vw,72px); letter-spacing:.5px; line-height:1.05;
-    background: linear-gradient(90deg, #6ea8fe, #c77dff);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow: 0 1px 0 rgba(0,0,0,.25);
-    filter: drop-shadow(0 6px 18px rgba(0,0,0,.25));
-    white-space:pre-wrap; word-break:break-word;
-  }
+  .row>*{flex:1}
   .btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
-  button{
-    border:1px solid rgba(255,255,255,.14); background:#10163a; color:var(--text);
-    padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600;
-  }
-  button:active{transform:translateY(1px)}
-  .out{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-       background:#0f132b; border:1px dashed rgba(255,255,255,.14); border-radius:10px;
-       padding:10px; font-size:13px; color:#e7f0ff; word-break:break-all}
-  .twoCols{display:grid; gap:12px; grid-template-columns:1fr 1fr}
-  @media (max-width:720px){ .twoCols{grid-template-columns:1fr} }
+  button{border:1px solid rgba(255,255,255,.14); background:#10163a; color:#fff; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600}
+  .out{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+       background:#0f132b; border:1px dashed rgba(255,255,255,.14); border-radius:10px; padding:10px; font-size:13px; word-break:break-all}
+  .preview{display:flex; align-items:center; justify-content:center; min-height:200px; border-radius:12px; background:var(--card); overflow:auto}
+  .hint{font-size:12px; color:var(--muted)}
 </style>
 </head>
 <body>
-  <div class="app">
-    <h1>Градиент для ника (Minecraft)</h1>
-    <div class="grid">
-      <section class="card">
-        <label for="nick">Никнейм</label>
-        <input id="nick" type="text" placeholder="Например, StevePro" value="StevePro" />
-        <div class="row" style="margin-top:12px">
-          <div>
-            <label for="c1">Цвет слева</label>
-            <input id="c1" type="color" value="#6ea8fe" />
-          </div>
-          <div>
-            <label for="c2">Цвет справа</label>
-            <input id="c2" type="color" value="#c77dff" />
-          </div>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <div>
-            <label for="angle">Угол градиента (°)</label>
-            <input id="angle" type="range" min="0" max="360" value="90" />
-          </div>
-          <div>
-            <label for="font">Шрифт</label>
-            <select id="font">
-              <option value="Minecraftia,'Press Start 2P',monospace">Пиксельный</option>
-              <option value="Inter,system-ui,Arial,sans-serif" selected>Гладкий</option>
-              <option value="'Segoe UI',Roboto,Arial,sans-serif">Системный</option>
-              <option value="monospace">Monospace</option>
-            </select>
-          </div>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <div>
-            <label for="size">Размер (px)</label>
-            <input id="size" type="number" min="16" max="200" value="72" />
-          </div>
-          <div>
-            <label for="stroke">Обводка (px)</label>
-            <input id="stroke" type="number" min="0" max="8" value="0" />
-          </div>
-        </div>
-        <p class="hint">Примечание: в чистом Minecraft Java градиенты в чате не поддерживаются, но работают в плагинах/ядрах с hex-цветами (Spigot/Paper 1.16+, MiniMessage и т.п.).</p>
-      </section>
+<div class="app">
+  <h1>Градиентный ник (SVG, 3 цвета)</h1>
 
-      <section class="card">
-        <div class="preview"><div id="preview" class="nickname">StevePro</div></div>
-        <div class="btns">
-          <button id="copyMini">Скопировать MiniMessage</button>
-          <button id="copyLegacy">Скопировать §x-hex</button>
-          <button id="copyHTML">Скопировать как HTML</button>
-          <button id="savePNG">Скачать PNG</button>
-        </div>
-      </section>
-    </div>
+  <div class="grid">
+    <section class="card">
+      <label for="nick">Никнейм</label>
+      <input id="nick" type="text" value="StevePro" placeholder="Например, StevePro" />
 
-    <div class="twoCols" style="margin-top:16px">
-      <section class="card">
-        <label>MiniMessage</label>
-        <div id="miniOut" class="out"></div>
-      </section>
-      <section class="card">
-        <label>§x-hex (на каждый символ)</label>
-        <div id="legacyOut" class="out"></div>
-      </section>
-    </div>
+      <div class="row" style="margin-top:10px">
+        <div><label for="c1">Цвет 1</label><input id="c1" type="color" value="#6ea8fe"></div>
+        <div><label for="c2">Цвет 2</label><input id="c2" type="color" value="#c77dff"></div>
+        <div><label for="c3">Цвет 3</label><input id="c3" type="color" value="#ffb86b"></div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <div><label for="angle">Угол (°)</label><input id="angle" type="range" min="0" max="360" value="90"></div>
+        <div><label for="size">Размер (px)</label><input id="size" type="number" min="16" max="220" value="96"></div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <div><label for="font">Шрифт</label>
+          <select id="font">
+            <option value="Minecraftia,'Press Start 2P',monospace">Пиксельный</option>
+            <option value="Inter,system-ui,Arial,sans-serif" selected>Гладкий</option>
+            <option value="'Segoe UI',Roboto,Arial,sans-serif">Системный</option>
+            <option value="monospace">Monospace</option>
+          </select>
+        </div>
+        <div><label for="stroke">Обводка (px)</label><input id="stroke" type="number" min="0" max="8" value="0"></div>
+      </div>
+
+      <p class="hint">SVG-текст окрашен градиентом из 3 стопов. Экспорт работает для MiniMessage и §x-hex (по символам).</p>
+    </section>
+
+    <section class="card">
+      <div class="preview">
+        <!-- SVG-превью -->
+        <svg id="svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="220" viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop id="s1" offset="0%" stop-color="#6ea8fe"/>
+              <stop id="s2" offset="50%" stop-color="#c77dff"/>
+              <stop id="s3" offset="100%" stop-color="#ffb86b"/>
+            </linearGradient>
+            <filter id="strokeFilter">
+              <feMorphology in="SourceAlpha" operator="dilate" radius="1" result="dilated"/>
+              <feColorMatrix in="dilated" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0" result="shadow"/>
+              <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <text id="svgText" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                font-size="96" font-weight="800" fill="url(#grad)">StevePro</text>
+        </svg>
+      </div>
+
+      <div class="btns">
+        <button id="copyMini">Скопировать MiniMessage</button>
+        <button id="copyLegacy">Скопировать §x-hex</button>
+        <button id="savePNG">Скачать PNG</button>
+        <button id="saveSVG">Скачать SVG</button>
+      </div>
+    </section>
   </div>
 
+  <div class="grid" style="grid-template-columns:1fr 1fr; margin-top:16px">
+    <section class="card">
+      <label>MiniMessage</label>
+      <div id="miniOut" class="out"></div>
+    </section>
+    <section class="card">
+      <label>§x-hex (по символам)</label>
+      <div id="legacyOut" class="out"></div>
+    </section>
+  </div>
+</div>
+
 <script>
-  // ========= helpers =========
-  const $ = s => document.querySelector(s);
-  const nick = $('#nick'), c1 = $('#c1'), c2 = $('#c2'), angle = $('#angle');
-  const font = $('#font'), size = $('#size'), stroke = $('#stroke');
-  const preview = $('#preview'), miniOut = $('#miniOut'), legacyOut = $('#legacyOut');
+const $ = s => document.querySelector(s);
+const nick=$('#nick'), c1=$('#c1'), c2=$('#c2'), c3=$('#c3'), angle=$('#angle'), size=$('#size'), font=$('#font'), stroke=$('#stroke');
+const svg=$('#svg'), svgText=$('#svgText'), s1=$('#s1'), s2=$('#s2'), s3=$('#s3'), miniOut=$('#miniOut'), legacyOut=$('#legacyOut');
 
-  function toHex(c){ return c.toUpperCase(); }
-  function lerp(a,b,t){ return a + (b-a)*t; }
-  function hexToRgb(h){
-    const m = h.replace('#',''); return {
-      r: parseInt(m.substring(0,2),16),
-      g: parseInt(m.substring(2,4),16),
-      b: parseInt(m.substring(4,6),16)
-    };
+function hexToRgb(h){const m=h.replace('#','');return{r:parseInt(m.slice(0,2),16),g:parseInt(m.slice(2,4),16),b:parseInt(m.slice(4,6),16)}}
+function rgbToHex({r,g,b}){return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase()}
+function lerp(a,b,t){return a+(b-a)*t}
+function lerpRgb(a,b,t){return {r:Math.round(lerp(a.r,b.r,t)), g:Math.round(lerp(a.g,b.g,t)), b:Math.round(lerp(a.b,b.b,t))}}
+function splitChars(str){return Array.from(str)} // простая сегментация
+
+function threeColorGradientColorAt(t, h1, h2, h3){
+  const A=hexToRgb(h1), B=hexToRgb(h2), C=hexToRgb(h3);
+  if(t<=0.5){ return rgbToHex(lerpRgb(A,B,t/0.5)); }
+  return rgbToHex(lerpRgb(B,C,(t-0.5)/0.5));
+}
+
+function buildLegacyPerChar(str,h1,h2,h3){
+  const chars = splitChars(str).filter(ch=>ch!=='\n');
+  const N = Math.max(1, chars.length-1);
+  let out = '', idx = 0;
+  for(const ch of splitChars(str)){
+    if(ch==='\n'){ out+='\n'; continue; }
+    const t = (N===0)?0:idx/N;
+    const hex = threeColorGradientColorAt(t,h1,h2,h3);
+    const seq='§x'+hex.slice(1).split('').map(n=>'§'+n).join('');
+    out += seq + ch;
+    idx++;
   }
-  function rgbToHex({r,g,b}){
-    return '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
-  }
-  function splitGraphemes(str){
-    // простой сплит по символам (без сложных emoji-комбинаций)
-    return Array.from(str);
-  }
+  return out;
+}
 
-  function buildLegacyPerChar(str, startHex, endHex){
-    const a = hexToRgb(startHex), b = hexToRgb(endHex);
-    const chars = splitGraphemes(str);
-    const N = Math.max(1, chars.filter(ch=>ch!=='\n').length - 1);
-    let idx = 0;
-    return chars.map(ch=>{
-      if(ch === '\n'){ return '\n'; }
-      const t = N===0 ? 0 : (idx / N);
-      const rgb = {
-        r: Math.round(lerp(a.r,b.r,t)),
-        g: Math.round(lerp(a.g,b.g,t)),
-        b: Math.round(lerp(a.b,b.b,t))
-      };
-      const hex = rgbToHex(rgb);
-      idx++;
-      // §x§R§R§G§G§B§B
-      const seq = '§x' + hex.slice(1).split('').map(n=>'§'+n).join('');
-      return seq + ch;
-    }).join('');
-  }
+function update(){
+  const text = nick.value || ' ';
+  const h1 = c1.value.toUpperCase(), h2 = c2.value.toUpperCase(), h3 = c3.value.toUpperCase();
 
-  function update(){
-    const text = nick.value || '';
-    const h1 = toHex(c1.value), h2 = toHex(c2.value);
-    // preview styles
-    preview.textContent = text || ' ';
-    preview.style.background = `linear-gradient(${angle.value}deg, ${h1}, ${h2})`;
-    preview.style.fontFamily = font.value;
-    preview.style.fontSize = (parseInt(size.value)||72) + 'px';
-    const sw = Math.max(0, Math.min(8, parseInt(stroke.value)||0));
-    preview.style.webkitTextStroke = sw ? `${sw}px rgba(0,0,0,.6)` : 'unset';
-
-    // outputs
-    const mini = `<gradient:${h1}:${h2}>${text}</gradient>`;
-    miniOut.textContent = mini;
-
-    const legacy = buildLegacyPerChar(text, h1, h2);
-    legacyOut.textContent = legacy;
+  // обновить SVG текст
+  svgText.textContent = text;
+  svgText.setAttribute('font-size', Math.max(16, Math.min(220, parseInt(size.value)||96)));
+  svgText.setAttribute('style', `font-family:${font.value}; font-weight:800`);
+  // обводка
+  const sw = Math.max(0, Math.min(8, parseInt(stroke.value)||0));
+  if(sw){
+    svgText.setAttribute('stroke','rgba(0,0,0,.7)');
+    svgText.setAttribute('stroke-width', sw);
+    svgText.setAttribute('paint-order','stroke fill');
+  }else{
+    svgText.removeAttribute('stroke'); svgText.removeAttribute('stroke-width'); svgText.removeAttribute('paint-order');
   }
 
-  // copy helpers
-  async function copy(el){
-    const txt = el.textContent;
-    try{
-      await navigator.clipboard.writeText(txt);
-      toast('Скопировано!');
-    }catch(e){
-      toast('Не удалось скопировать, выделите вручную.');
-    }
-  }
-  function toast(msg){
-    const t = document.createElement('div');
-    t.textContent = msg;
-    t.style.position='fixed'; t.style.bottom='16px'; t.style.left='50%'; t.style.transform='translateX(-50%)';
-    t.style.background='rgba(20,24,56,.95)'; t.style.color='white';
-    t.style.border='1px solid rgba(255,255,255,.15)'; t.style.padding='10px 14px';
-    t.style.borderRadius='10px'; t.style.zIndex=9999; t.style.fontWeight='600';
-    document.body.appendChild(t); setTimeout(()=>t.remove(),1400);
-  }
+  // градиент + угол через gradientTransform (вращение вокруг центра)
+  s1.setAttribute('stop-color', h1);
+  s2.setAttribute('stop-color', h2);
+  s3.setAttribute('stop-color', h3);
+  // фиксированные оффсеты: 0%, 50%, 100%
+  const rot = parseFloat(angle.value)||0;
+  const defs = svg.querySelector('#grad');
+  defs.setAttribute('gradientUnits','objectBoundingBox');
+  defs.setAttribute('gradientTransform', `rotate(${rot})`);
 
-  // PNG export via canvas
-  function savePNG(){
-    const text = nick.value || '';
-    const h1 = toHex(c1.value), h2 = toHex(c2.value);
-    const px = Math.max(16, Math.min(200, parseInt(size.value)||72));
-    // Create offscreen canvas
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    ctx.font = `${px}px ${getComputedStyle(preview).fontFamily}`;
-    const metrics = ctx.measureText(text);
-    const pad = Math.round(px*0.4);
-    canvas.width = Math.ceil(metrics.width) + pad*2;
-    canvas.height = Math.ceil(px*1.35) + pad*2;
+  // размеры viewBox под текст (грубо оцениваем ширину)
+  const context = document.createElement('canvas').getContext('2d');
+  context.font = `${svgText.getAttribute('font-size')}px ${font.value}`;
+  const metrics = context.measureText(text);
+  const pad=60, w=Math.max(320, Math.ceil(metrics.width)+pad*2), h=220;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svgText.setAttribute('x', w/2); svgText.setAttribute('y', h/2);
 
-    // background transparent
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+  // выводы
+  miniOut.textContent = `<gradient:${h1}:${h2}:${h3}>${text}</gradient>`;
+  legacyOut.textContent = buildLegacyPerChar(text,h1,h2,h3);
+}
 
-    // gradient
-    const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
-    grad.addColorStop(0, h1); grad.addColorStop(1, h2);
+function download(filename, dataurl){
+  const a=document.createElement('a'); a.href=dataurl; a.download=filename; a.click();
+}
+function toast(msg){
+  const t=document.createElement('div'); t.textContent=msg;
+  t.style.position='fixed'; t.style.bottom='16px'; t.style.left='50%'; t.style.transform='translateX(-50%)';
+  t.style.background='rgba(20,24,56,.95)'; t.style.color='white'; t.style.border='1px solid rgba(255,255,255,.15)';
+  t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.zIndex=9999; t.style.fontWeight='600';
+  document.body.appendChild(t); setTimeout(()=>t.remove(),1400);
+}
 
-    // optional stroke
-    const sw = Math.max(0, Math.min(8, parseInt(stroke.value)||0));
-    if(sw){
-      ctx.lineWidth = sw*2;
-      ctx.strokeStyle = 'rgba(0,0,0,.6)';
-      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-      ctx.strokeText(text, pad, pad + px);
-    }
+$('#copyMini').addEventListener('click', async()=>{ await navigator.clipboard.writeText(miniOut.textContent).catch(()=>{}); toast('MiniMessage скопирован!') });
+$('#copyLegacy').addEventListener('click', async()=>{ await navigator.clipboard.writeText(legacyOut.textContent).catch(()=>{}); toast('§x-hex скопирован!') });
 
-    ctx.fillStyle = grad;
-    ctx.fillText(text, pad, pad + px);
+$('#savePNG').addEventListener('click', ()=>{
+  // рендер SVG -> PNG через canvas
+  const serializer = new XMLSerializer();
+  const src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(serializer.serializeToString(svg));
+  const img = new Image();
+  img.onload = ()=>{
+    const canvas=document.createElement('canvas'); canvas.width = img.width; canvas.height = img.height;
+    const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0);
+    download(`nickname_${Date.now()}.png`, canvas.toDataURL('image/png'));
+  };
+  img.src = src;
+});
 
-    const url = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = url; a.download = `nickname_${Date.now()}.png`; a.click();
-  }
+$('#saveSVG').addEventListener('click', ()=>{
+  const serializer = new XMLSerializer();
+  const text = serializer.serializeToString(svg);
+  const blob = new Blob([text], {type:'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  download(`nickname_${Date.now()}.svg`, url);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
 
-  // events
-  [nick,c1,c2,angle,font,size,stroke].forEach(el=>el.addEventListener('input', update));
-  $('#copyMini').addEventListener('click',()=>copy(miniOut));
-  $('#copyLegacy').addEventListener('click',()=>copy(legacyOut));
-  $('#copyHTML').addEventListener('click',()=>{
-    const html = preview.outerHTML.replace(' id="preview"','');
-    navigator.clipboard.writeText(html).then(()=>toast('HTML скопирован!')).catch(()=>toast('Не удалось скопировать.'));
-  });
-  $('#savePNG').addEventListener('click', savePNG);
-
-  // initial
-  update();
+[nick,c1,c2,c3,angle,size,font,stroke].forEach(el=>el.addEventListener('input', update));
+update();
 </script>
 </body>
 </html>
