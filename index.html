@@ -1,64 +1,269 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>t0dd15 Links</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #0d1117;
-            font-family: Arial, sans-serif;
-            color: #c9d1d9;
-            text-align: center;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            color: #58a6ff;
-        }
-
-        .link {
-            text-decoration: none;
-            font-size: 1.2rem;
-            color: #c9d1d9;
-            background: #21262d;
-            padding: 12px 30px;
-            border: 2px solid #30363d;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .link:hover {
-            background: #30363d;
-            border-color: #58a6ff;
-            color: #58a6ff;
-        }
-
-        .link:active {
-            transform: scale(0.95);
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Градиент для ника — Minecraft</title>
+<style>
+  :root{
+    --bg:#0f1221; --card:#151935; --text:#e7e9ff; --muted:#a7afd9; --accent:#6ea8fe;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 10% 10%, #1a2050 0%, #0f1221 60%) no-repeat var(--bg);
+    color:var(--text); display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .app{width:min(100%,980px)}
+  .grid{display:grid; gap:16px; grid-template-columns: 1.2fr .8fr}
+  @media (max-width:920px){ .grid{grid-template-columns:1fr} }
+  .card{
+    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px; padding:18px 16px; backdrop-filter: blur(6px);
+    box-shadow:0 10px 24px rgba(0,0,0,.35);
+  }
+  h1{margin:.2em 0 .6em; font-size:clamp(22px,3vw,30px)}
+  label{font-size:13px; color:var(--muted); display:block; margin-bottom:6px}
+  input[type="text"]{
+    width:100%; padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
+    background:#0f132b; color:var(--text); outline:none; font-size:16px;
+  }
+  .row{display:flex; gap:12px; align-items:center}
+  .row > *{flex:1}
+  .hint{font-size:12px; color:var(--muted); margin-top:6px}
+  select, input[type="number"], input[type="range"]{
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
+    background:#0f132b; color:var(--text); outline:none; font-size:14px;
+  }
+  .preview{
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    min-height:160px; border-radius:12px; background:var(--card); position:relative; overflow:hidden;
+  }
+  .nickname{
+    font-weight:800; font-size:clamp(36px,8vw,72px); letter-spacing:.5px; line-height:1.05;
+    background: linear-gradient(90deg, #6ea8fe, #c77dff);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow: 0 1px 0 rgba(0,0,0,.25);
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,.25));
+    white-space:pre-wrap; word-break:break-word;
+  }
+  .btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
+  button{
+    border:1px solid rgba(255,255,255,.14); background:#10163a; color:var(--text);
+    padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600;
+  }
+  button:active{transform:translateY(1px)}
+  .out{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+       background:#0f132b; border:1px dashed rgba(255,255,255,.14); border-radius:10px;
+       padding:10px; font-size:13px; color:#e7f0ff; word-break:break-all}
+  .twoCols{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+  @media (max-width:720px){ .twoCols{grid-template-columns:1fr} }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>t0dd15 Links</h1>
-        <a href="https://t.me/tXdd15" class="link" target="_blank">Telegram</a>
-        <a href="https://steamcommunity.com/id/fuckfuckfuckfuckfuckfuckfucku/" class="link" target="_blank">Steam</a>
-        <a href="https://discord.com/invite/t0dd15" class="link" target="_blank">Discord</a>
+  <div class="app">
+    <h1>Градиент для ника (Minecraft)</h1>
+    <div class="grid">
+      <section class="card">
+        <label for="nick">Никнейм</label>
+        <input id="nick" type="text" placeholder="Например, StevePro" value="StevePro" />
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label for="c1">Цвет слева</label>
+            <input id="c1" type="color" value="#6ea8fe" />
+          </div>
+          <div>
+            <label for="c2">Цвет справа</label>
+            <input id="c2" type="color" value="#c77dff" />
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div>
+            <label for="angle">Угол градиента (°)</label>
+            <input id="angle" type="range" min="0" max="360" value="90" />
+          </div>
+          <div>
+            <label for="font">Шрифт</label>
+            <select id="font">
+              <option value="Minecraftia,'Press Start 2P',monospace">Пиксельный</option>
+              <option value="Inter,system-ui,Arial,sans-serif" selected>Гладкий</option>
+              <option value="'Segoe UI',Roboto,Arial,sans-serif">Системный</option>
+              <option value="monospace">Monospace</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div>
+            <label for="size">Размер (px)</label>
+            <input id="size" type="number" min="16" max="200" value="72" />
+          </div>
+          <div>
+            <label for="stroke">Обводка (px)</label>
+            <input id="stroke" type="number" min="0" max="8" value="0" />
+          </div>
+        </div>
+        <p class="hint">Примечание: в чистом Minecraft Java градиенты в чате не поддерживаются, но работают в плагинах/ядрах с hex-цветами (Spigot/Paper 1.16+, MiniMessage и т.п.).</p>
+      </section>
+
+      <section class="card">
+        <div class="preview"><div id="preview" class="nickname">StevePro</div></div>
+        <div class="btns">
+          <button id="copyMini">Скопировать MiniMessage</button>
+          <button id="copyLegacy">Скопировать §x-hex</button>
+          <button id="copyHTML">Скопировать как HTML</button>
+          <button id="savePNG">Скачать PNG</button>
+        </div>
+      </section>
     </div>
+
+    <div class="twoCols" style="margin-top:16px">
+      <section class="card">
+        <label>MiniMessage</label>
+        <div id="miniOut" class="out"></div>
+      </section>
+      <section class="card">
+        <label>§x-hex (на каждый символ)</label>
+        <div id="legacyOut" class="out"></div>
+      </section>
+    </div>
+  </div>
+
+<script>
+  // ========= helpers =========
+  const $ = s => document.querySelector(s);
+  const nick = $('#nick'), c1 = $('#c1'), c2 = $('#c2'), angle = $('#angle');
+  const font = $('#font'), size = $('#size'), stroke = $('#stroke');
+  const preview = $('#preview'), miniOut = $('#miniOut'), legacyOut = $('#legacyOut');
+
+  function toHex(c){ return c.toUpperCase(); }
+  function lerp(a,b,t){ return a + (b-a)*t; }
+  function hexToRgb(h){
+    const m = h.replace('#',''); return {
+      r: parseInt(m.substring(0,2),16),
+      g: parseInt(m.substring(2,4),16),
+      b: parseInt(m.substring(4,6),16)
+    };
+  }
+  function rgbToHex({r,g,b}){
+    return '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+  }
+  function splitGraphemes(str){
+    // простой сплит по символам (без сложных emoji-комбинаций)
+    return Array.from(str);
+  }
+
+  function buildLegacyPerChar(str, startHex, endHex){
+    const a = hexToRgb(startHex), b = hexToRgb(endHex);
+    const chars = splitGraphemes(str);
+    const N = Math.max(1, chars.filter(ch=>ch!=='\n').length - 1);
+    let idx = 0;
+    return chars.map(ch=>{
+      if(ch === '\n'){ return '\n'; }
+      const t = N===0 ? 0 : (idx / N);
+      const rgb = {
+        r: Math.round(lerp(a.r,b.r,t)),
+        g: Math.round(lerp(a.g,b.g,t)),
+        b: Math.round(lerp(a.b,b.b,t))
+      };
+      const hex = rgbToHex(rgb);
+      idx++;
+      // §x§R§R§G§G§B§B
+      const seq = '§x' + hex.slice(1).split('').map(n=>'§'+n).join('');
+      return seq + ch;
+    }).join('');
+  }
+
+  function update(){
+    const text = nick.value || '';
+    const h1 = toHex(c1.value), h2 = toHex(c2.value);
+    // preview styles
+    preview.textContent = text || ' ';
+    preview.style.background = `linear-gradient(${angle.value}deg, ${h1}, ${h2})`;
+    preview.style.fontFamily = font.value;
+    preview.style.fontSize = (parseInt(size.value)||72) + 'px';
+    const sw = Math.max(0, Math.min(8, parseInt(stroke.value)||0));
+    preview.style.webkitTextStroke = sw ? `${sw}px rgba(0,0,0,.6)` : 'unset';
+
+    // outputs
+    const mini = `<gradient:${h1}:${h2}>${text}</gradient>`;
+    miniOut.textContent = mini;
+
+    const legacy = buildLegacyPerChar(text, h1, h2);
+    legacyOut.textContent = legacy;
+  }
+
+  // copy helpers
+  async function copy(el){
+    const txt = el.textContent;
+    try{
+      await navigator.clipboard.writeText(txt);
+      toast('Скопировано!');
+    }catch(e){
+      toast('Не удалось скопировать, выделите вручную.');
+    }
+  }
+  function toast(msg){
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.position='fixed'; t.style.bottom='16px'; t.style.left='50%'; t.style.transform='translateX(-50%)';
+    t.style.background='rgba(20,24,56,.95)'; t.style.color='white';
+    t.style.border='1px solid rgba(255,255,255,.15)'; t.style.padding='10px 14px';
+    t.style.borderRadius='10px'; t.style.zIndex=9999; t.style.fontWeight='600';
+    document.body.appendChild(t); setTimeout(()=>t.remove(),1400);
+  }
+
+  // PNG export via canvas
+  function savePNG(){
+    const text = nick.value || '';
+    const h1 = toHex(c1.value), h2 = toHex(c2.value);
+    const px = Math.max(16, Math.min(200, parseInt(size.value)||72));
+    // Create offscreen canvas
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.font = `${px}px ${getComputedStyle(preview).fontFamily}`;
+    const metrics = ctx.measureText(text);
+    const pad = Math.round(px*0.4);
+    canvas.width = Math.ceil(metrics.width) + pad*2;
+    canvas.height = Math.ceil(px*1.35) + pad*2;
+
+    // background transparent
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // gradient
+    const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    grad.addColorStop(0, h1); grad.addColorStop(1, h2);
+
+    // optional stroke
+    const sw = Math.max(0, Math.min(8, parseInt(stroke.value)||0));
+    if(sw){
+      ctx.lineWidth = sw*2;
+      ctx.strokeStyle = 'rgba(0,0,0,.6)';
+      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.strokeText(text, pad, pad + px);
+    }
+
+    ctx.fillStyle = grad;
+    ctx.fillText(text, pad, pad + px);
+
+    const url = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url; a.download = `nickname_${Date.now()}.png`; a.click();
+  }
+
+  // events
+  [nick,c1,c2,angle,font,size,stroke].forEach(el=>el.addEventListener('input', update));
+  $('#copyMini').addEventListener('click',()=>copy(miniOut));
+  $('#copyLegacy').addEventListener('click',()=>copy(legacyOut));
+  $('#copyHTML').addEventListener('click',()=>{
+    const html = preview.outerHTML.replace(' id="preview"','');
+    navigator.clipboard.writeText(html).then(()=>toast('HTML скопирован!')).catch(()=>toast('Не удалось скопировать.'));
+  });
+  $('#savePNG').addEventListener('click', savePNG);
+
+  // initial
+  update();
+</script>
 </body>
 </html>
