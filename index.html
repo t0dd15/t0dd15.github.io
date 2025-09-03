@@ -1,253 +1,626 @@
-<!doctype html> 
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Меню — Retro (Windows 95)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<style>
-  /* ===== Windows 95 palette / layout ===== */
-  :root{
-    --win95-bg:#008080;          /* рабочий стол */
-    --win95-face:#C0C0C0;        /* серый фон окон */
-    --win95-dk:#808080;          /* тёмная грань */
-    --win95-lt:#FFFFFF;          /* светлая грань */
-    --win95-shadow:#404040;      /* тень */
-    --win95-text:#000;
-    --title-active:#000080;      /* синий заголовка */
-    --title-inactive:#808080;
-    --title-text:#fff;
-  }
-  html,body{height:100%}
-  body{
-    margin:0;
-    background:
-      linear-gradient(0deg, rgba(0,0,0,.25), rgba(0,0,0,.25)) 0 0/2px 2px,
-      var(--win95-bg);
-    image-rendering: pixelated;
-    font-family: "MS Sans Serif", Tahoma, "Press Start 2P", system-ui, sans-serif;
-    color:var(--win95-text);
-    cursor: url('data:image/svg+xml;utf8,\
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24">\
-        <polygon points="0,0 0,16 4,12 7,22 10,21 7,12 12,12" fill="black"/>\
-        <polygon points="1,2 1,14 4,11 7,21 9,20 6,11 11,11" fill="white"/>\
-      </svg>') 1 1, default;
-  }
-  .desktop{
-    min-height:100%;
-    padding:32px;
-    display:grid;
-    place-items:center;
-  }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Retro 95 — эмулятор</title>
 
-  /* ===== Window (“error” box) ===== */
-  .win{
-    width:min(520px, 95vw);
-    background:var(--win95-face);
-    border:2px solid var(--win95-shadow);
-    box-shadow: 2px 2px 0 var(--win95-dk),
-                -1px -1px 0 var(--win95-lt),
-                8px 8px 0 rgba(0,0,0,.25);
-    position:relative;
-    user-select:none;
-  }
-  .titlebar{
-    height:26px; display:flex; align-items:center; gap:8px;
-    background:linear-gradient(90deg, #000080 0%, #1084d0 100%);
-    color:var(--title-text); padding:0 6px;
-    font-weight:700; font-size:13px;
-    -webkit-font-smoothing: none;
-    cursor:move;
-  }
-  .titlebar .btn{
-    margin-left:auto; display:flex; gap:6px;
-  }
-  .tb-btn{
-    width:18px; height:18px; background:var(--win95-face);
-    box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
-    border:1px solid var(--win95-shadow); display:grid; place-items:center; cursor:pointer;
-  }
-  .tb-btn:active{
-    box-shadow: inset 1px 1px 0 var(--win95-dk), inset -1px -1px 0 var(--win95-lt);
-  }
+  <!-- Пиксельный шрифт для заголовка; системные для текста -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-  .win-body{ display:flex; gap:12px; padding:16px 14px 12px; align-items:flex-start }
-  .icon{
-    width:36px; height:36px; flex:0 0 36px; margin-top:2px;
-    background:
-      radial-gradient(circle at 30% 30%, #ff0000 0 35%, #a00000 36% 70%, transparent 0) no-repeat,
-      radial-gradient(circle at 64% 64%, #ff8080 0 20%, transparent 21%) no-repeat;
-    border:1px solid #700; box-shadow: inset 1px 1px 0 #fcc;
-  }
-  .msg{
-    font-size:14px; line-height:1.3;
-  }
-  .hr{ height:2px; background:var(--win95-face); box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt); margin:8px 0 10px; }
+  <style>
+    /* ===============================
+       ТЕМА WIN95: цвета и размеры
+       =============================== */
+    :root{
+      --win95-bg:#008080;
+      --win95-face:#C0C0C0;
+      --win95-dk:#808080;
+      --win95-lt:#FFFFFF;
+      --win95-shadow:#404040;
+      --win95-text:#000;
+      --title-active:#000080;
+      --title-active-2:#1084d0;
+      --title-text:#fff;
 
-  /* ===== 95-style button ===== */
-  .btn95{
-    padding:6px 18px; font-size:13px; background:var(--win95-face);
-    border:1px solid var(--win95-shadow);
-    box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
-    cursor:pointer; min-width:110px;
-  }
-  .btn95:active{
-    box-shadow: inset 1px 1px 0 var(--win95-dk), inset -1px -1px 0 var(--win95-lt);
-    padding-top:7px; padding-left:19px; padding-bottom:5px; padding-right:17px;
-  }
-  .actions{ display:flex; gap:10px; justify-content:flex-end; padding:0 14px 14px }
+      --taskbar-h: 38px;
+      --font-ui: "MS Sans Serif", Tahoma, Arial, sans-serif;
+      --font-pixel: "Press Start 2P", monospace;
+    }
 
-  /* stack of windows */
-  .stack{ display:grid; gap:22px }
-  @media (max-width:720px){ .stack{ gap:16px } }
+    /* ===============================
+       БАЗА / СЦЕНА
+       =============================== */
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      background:
+        linear-gradient(0deg, rgba(0,0,0,.25), rgba(0,0,0,.25)) 0 0/2px 2px,
+        var(--win95-bg);
+      image-rendering: pixelated;
+      color: var(--win95-text);
+      font-family: var(--font-ui);
+      /* Курсор Win95-подобный */
+      cursor: url('data:image/svg+xml;utf8,\
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24">\
+          <polygon points="0,0 0,16 4,12 7,22 10,21 7,12 12,12" fill="black"/>\
+          <polygon points="1,2 1,14 4,11 7,21 9,20 6,11 11,11" fill="white"/>\
+        </svg>') 1 1, default;
+      overflow:hidden;
+    }
 
-  /* links inside error window */
-  .link-block{
-    display:flex; gap:12px; flex-wrap:wrap; margin-top:8px;
-  }
-  .small{ font-size:12px; color:#333 }
-  a{ color:#000; text-decoration:none }
-  a:focus-visible{ outline:2px dashed #000; outline-offset:2px }
+    /* Рабочий стол (сцена под окнами) */
+    .desktop {
+      position: fixed;
+      inset: 0 0 var(--taskbar-h) 0;
+      padding: 32px;
+      outline: none;
+    }
 
-  /* draggable hint */
-  .drag-hint{ position:absolute; top:-18px; left:0; right:0; text-align:center; font-size:11px; color:#fff8; }
-</style>
+    /* Подсказка по перетаскиванию */
+    .drag-hint {
+      position: absolute;
+      top: 8px; left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      opacity: .6;
+      font-size: 11px;
+      font-family: var(--font-ui);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ===============================
+       ПАНЕЛЬ ЗАДАЧ
+       =============================== */
+    .taskbar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      height: var(--taskbar-h);
+      background: var(--win95-face);
+      border-top: 2px solid var(--win95-shadow);
+      box-shadow: inset 0 2px 0 var(--win95-lt);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 6px;
+      z-index: 10_000;
+    }
+
+    /* Кнопка Пуск */
+    .start-btn {
+      display: inline-grid;
+      grid-auto-flow: column;
+      align-items: center;
+      gap: 6px;
+      height: calc(var(--taskbar-h) - 10px);
+      padding: 0 10px;
+      background: var(--win95-face);
+      border: 1px solid var(--win95-shadow);
+      box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
+      cursor: pointer;
+      user-select: none;
+      font-weight: 700;
+    }
+    .start-btn:active{
+      box-shadow: inset 1px 1px 0 var(--win95-dk), inset -1px -1px 0 var(--win95-lt);
+      transform: translateY(1px);
+    }
+
+    /* Простое меню Пуск */
+    .start-menu {
+      position: fixed;
+      left: 6px;
+      bottom: var(--taskbar-h);
+      width: 220px;
+      background: var(--win95-face);
+      border: 2px solid var(--win95-shadow);
+      box-shadow: 4px 4px 0 rgba(0,0,0,.25), inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
+      display: none;
+    }
+    .start-menu.open { display: block; }
+    .menu-item {
+      padding: 8px 10px;
+      border-bottom: 1px solid #aaa;
+      cursor: default;
+    }
+    .menu-item:last-child{ border-bottom: 0; }
+    .menu-item:hover { background: #000080; color: #fff; }
+
+    /* Вкладки-приложения (кнопки в панели задач) */
+    .task-buttons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .task-tab {
+      min-width: 140px;
+      padding: 0 10px;
+      height: calc(var(--taskbar-h) - 10px);
+      display: grid; align-items: center;
+      background: var(--win95-face);
+      border: 1px solid var(--win95-shadow);
+      box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
+      cursor: pointer;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .task-tab.active {
+      /* Нажатая/активная вкладка */
+      box-shadow: inset 1px 1px 0 var(--win95-dk), inset -1px -1px 0 var(--win95-lt);
+    }
+
+    /* Часы */
+    .clock {
+      min-width: 80px;
+      text-align: center;
+      padding: 0 8px;
+      height: calc(var(--taskbar-h) - 10px);
+      display: grid; align-items: center;
+      background: var(--win95-face);
+      border: 1px solid var(--win95-shadow);
+      box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ===============================
+       ОКНА (ошибки/диалоги)
+       =============================== */
+    .win {
+      position: absolute;
+      width: min(520px, 95vw);
+      background: var(--win95-face);
+      border: 2px solid var(--win95-shadow);
+      box-shadow: 2px 2px 0 var(--win95-dk),
+                  -1px -1px 0 var(--win95-lt),
+                  8px 8px 0 rgba(0,0,0,.25);
+      user-select: none;
+    }
+    .win.hidden { display: none; }
+
+    .win__titlebar{
+      height: 26px;
+      display: flex; align-items: center; gap: 8px;
+      background: linear-gradient(90deg, var(--title-active) 0%, var(--title-active-2) 100%);
+      color: var(--title-text); padding: 0 6px;
+      font-weight: 700; font-size: 13px;
+      -webkit-font-smoothing: none;
+      cursor: move;
+    }
+    .win__title { pointer-events: none; }
+    .win__buttons{ margin-left: auto; display: flex; gap: 6px; }
+    .tb-btn{
+      width:18px; height:18px; background:var(--win95-face);
+      box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
+      border:1px solid var(--win95-shadow); display:grid; place-items:center; cursor:pointer;
+    }
+    .tb-btn:active{
+      box-shadow: inset 1px 1px 0 var(--win95-dk), inset -1px -1px 0 var(--win95-lt);
+    }
+
+    .win__body{ display:flex; gap:12px; padding:16px 14px 12px; align-items:flex-start }
+    .icon{
+      width:36px; height:36px; flex:0 0 36px; margin-top:2px;
+      background:
+        radial-gradient(circle at 30% 30%, #ff0000 0 35%, #a00000 36% 70%, transparent 0) no-repeat,
+        radial-gradient(circle at 64% 64%, #ff8080 0 20%, transparent 21%) no-repeat;
+      border:1px solid #700; box-shadow: inset 1px 1px 0 #fcc;
+    }
+    .msg{ font-size:14px; line-height:1.3; }
+    .hr{ height:2px; background:var(--win95-face); box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt); margin:8px 0 10px; }
+
+    .btn95{
+      padding:6px 18px; font-size:13px; background:var(--win95-face);
+      border:1px solid var(--win95-shadow);
+      box-shadow: inset -1px -1px 0 var(--win95-dk), inset 1px 1px 0 var(--win95-lt);
+      cursor:pointer; min-width:110px;
+    }
+    .btn95:active{
+      box-shadow: inset 1px 1px 0 var(--win95-dk), inset -1px -1px 0 var(--win95-lt);
+      padding-top:7px; padding-left:19px; padding-bottom:5px; padding-right:17px;
+    }
+    .win__actions{ display:flex; gap:10px; justify-content:flex-end; padding:0 14px 14px }
+
+    /* Вариации иконок (по цветам) */
+    .icon--gold{
+      background:
+       radial-gradient(circle at 30% 30%, #ffbf00 0 35%, #a07a00 36% 70%, transparent 0) no-repeat,
+       radial-gradient(circle at 64% 64%, #ffe680 0 20%, transparent 21%) no-repeat;
+      border-color:#765400;
+    }
+    .icon--green{
+      background:
+       radial-gradient(circle at 30% 30%, #00cc66 0 35%, #008844 36% 70%, transparent 0) no-repeat,
+       radial-gradient(circle at 64% 64%, #88ffcc 0 20%, transparent 21%) no-repeat;
+      border-color:#0a6a3f;
+    }
+
+    /* Фокус для клавиатуры */
+    .focus-ring:focus-visible { outline: 2px dashed #000; outline-offset: 2px; }
+  </style>
 </head>
 <body>
-  <div class="desktop">
-    <div class="stack">
-      <!-- Window 1: Создание градиентов -->
-      <div class="win" data-link="/gradients/">
-        <div class="titlebar">
-          Ошибка
-          <div class="btn">
-            <div class="tb-btn" title="Свернуть">–</div>
-            <div class="tb-btn" title="Развернуть">□</div>
-            <div class="tb-btn" title="Закрыть">×</div>
-          </div>
-        </div>
-        <div class="win-body">
-          <div class="icon" aria-hidden="true"></div>
-          <div class="msg">
-            <b>Создание Minecraft-градиентов</b><br>
-            Произошла загадочная удача: найден лучший генератор RGB-ника!<br>
-            <div class="hr"></div>
-            <div class="link-block small">Нажми <i>OK</i>, чтобы открыть инструмент.</div>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="btn95 action-open">OK</button>
-          <button class="btn95 action-cancel">Отмена</button>
-        </div>
-      </div>
-
-      <!-- Window 2: Полезные ссылки и программы -->
-      <div class="win" data-link="/links.html">
-        <div class="titlebar">
-          Ошибка
-          <div class="btn">
-            <div class="tb-btn">–</div>
-            <div class="tb-btn">□</div>
-            <div class="tb-btn">×</div>
-          </div>
-        </div>
-        <div class="win-body">
-          <div class="icon" aria-hidden="true" style="background:
-            radial-gradient(circle at 30% 30%, #ffbf00 0 35%, #a07a00 36% 70%, transparent 0) no-repeat,
-            radial-gradient(circle at 64% 64%, #ffe680 0 20%, transparent 21%) no-repeat; border-color:#765400"></div>
-          <div class="msg">
-            <b>Полезные ссылки и программы</b><br>
-            Сборник ресурсов для сервера и клиента. Проверено временем.<br>
-            <div class="hr"></div>
-            <div class="link-block small">Жми <i>OK</i>, чтобы перейти к списку.</div>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="btn95 action-open">OK</button>
-          <button class="btn95 action-cancel">Отмена</button>
-        </div>
-      </div>
-
-      <!-- Window 3: Обо мне -->
-      <div class="win" data-link="/about.html">
-        <div class="titlebar">
-          Ошибка
-          <div class="btn">
-            <div class="tb-btn">–</div>
-            <div class="tb-btn">□</div>
-            <div class="tb-btn">×</div>
-          </div>
-        </div>
-        <div class="win-body">
-          <div class="icon" aria-hidden="true" style="background:
-            radial-gradient(circle at 30% 30%, #00cc66 0 35%, #008844 36% 70%, transparent 0) no-repeat,
-            radial-gradient(circle at 64% 64%, #88ffcc 0 20%, transparent 21%) no-repeat; border-color:#0a6a3f"></div>
-          <div class="msg">
-            <b>Обо мне</b><br>
-            Коротко о том, кто я, чем занимаюсь и как связаться.<br>
-            <div class="hr"></div>
-            <div class="link-block small">Нажми <i>OK</i> — и привет из 1995!</div>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="btn95 action-open">OK</button>
-          <button class="btn95 action-cancel">Отмена</button>
-        </div>
-      </div>
-    </div>
+  <!-- Рабочий стол -->
+  <div class="desktop" tabindex="-1" aria-label="Рабочий стол">
+    <div class="drag-hint">перетаскивай окна за синий заголовок</div>
   </div>
 
-<script>
-/* клик по окну/кнопке OK → переход */
-document.querySelectorAll('.win').forEach(win=>{
-  const url = win.getAttribute('data-link');
-  win.addEventListener('dblclick', ()=>location.href = url);
-  win.querySelectorAll('.action-open').forEach(btn=>btn.addEventListener('click', ()=>location.href = url));
-  win.querySelectorAll('.action-cancel').forEach(btn=>btn.addEventListener('click', ()=>{
-    // имитация закрытия: лёгкое "смятие"
-    win.style.transform = 'scale(0.98)';
-    setTimeout(()=>win.style.transform='none',120);
-  }));
-});
+  <!-- Панель задач -->
+  <div class="taskbar" role="toolbar" aria-label="Панель задач">
+    <button class="start-btn focus-ring" id="startBtn" aria-haspopup="true" aria-expanded="false">🪟 Пуск</button>
+    <div class="task-buttons" id="taskButtons" aria-label="Приложения"></div>
+    <div class="clock" id="clock" aria-label="Часы">--:--</div>
+  </div>
 
-/* простое перетаскивание за titlebar (без выхода за экран) */
-document.querySelectorAll('.win').forEach(win=>{
-  const bar = win.querySelector('.titlebar');
-  let sx=0, sy=0, ox=0, oy=0, dragging=false;
+  <!-- Меню Пуск -->
+  <div class="start-menu" id="startMenu" role="menu">
+    <div class="menu-item" role="menuitem">О программе… (шутливо)</div>
+    <div class="menu-item" role="menuitem">Выключить… (ещё шутливее)</div>
+  </div>
 
-  const start = (e)=>{
-    dragging=true;
-    const p = ('touches' in e)? e.touches[0] : e;
-    sx = p.clientX; sy = p.clientY;
-    const rect = win.getBoundingClientRect();
-    ox = rect.left; oy = rect.top;
-    win.style.position='absolute';
-    win.style.left = ox+'px'; win.style.top = oy+'px';
-    win.style.right = 'auto'; win.style.bottom='auto';
-    win.style.zIndex = String(Date.now()); // bring to front
-    e.preventDefault();
-  };
-  const move = (e)=>{
-    if(!dragging) return;
-    const p = ('touches' in e)? e.touches[0] : e;
-    const nx = ox + (p.clientX - sx);
-    const ny = oy + (p.clientY - sy);
-    // ограничение в пределах окна
-    const maxX = window.innerWidth - win.offsetWidth;
-    const maxY = window.innerHeight - win.offsetHeight;
-    win.style.left = Math.max(0, Math.min(nx, maxX)) + 'px';
-    win.style.top  = Math.max(0, Math.min(ny, maxY)) + 'px';
-  };
-  const end = ()=>{ dragging=false; };
+  <script>
+  // ===============================
+  //  ЭМУЛЯТОР WIN95 — ЛОГИКА
+  // ===============================
+  (function(){
+    /** Описание «приложений», которые открывают диалоги-ошибки */
+    const APPS = [
+      {
+        id: 'gradients',
+        tabLabel: 'Градиенты',
+        windowIcon: 'red',
+        title: 'Ошибка',
+        heading: 'Создание Minecraft-градиентов',
+        text: 'Произошла загадочная удача: найден лучший генератор RGB-ника!',
+        link: '/gradients/'
+      },
+      {
+        id: 'links',
+        tabLabel: 'Полезные ссылки',
+        windowIcon: 'gold',
+        title: 'Ошибка',
+        heading: 'Полезные ссылки и программы',
+        text: 'Сборник ресурсов для сервера и клиента. Проверено временем.',
+        link: '/links.html'
+      },
+      {
+        id: 'about',
+        tabLabel: 'Обо мне',
+        windowIcon: 'green',
+        title: 'Ошибка',
+        heading: 'Обо мне',
+        text: 'Коротко о том, кто я, чем занимаюсь и как связаться.',
+        link: '/about.html'
+      }
+    ];
 
-  bar.addEventListener('mousedown', start);
-  window.addEventListener('mousemove', move);
-  window.addEventListener('mouseup', end);
-  bar.addEventListener('touchstart', start, {passive:false});
-  window.addEventListener('touchmove', move, {passive:false});
-  window.addEventListener('touchend', end);
-});
-</script>
+    // Узлы DOM
+    const desktop     = document.querySelector('.desktop');
+    const taskButtons = document.getElementById('taskButtons');
+    const clockEl     = document.getElementById('clock');
+    const startBtn    = document.getElementById('startBtn');
+    const startMenu   = document.getElementById('startMenu');
+
+    // Состояние окон и Z-индекс
+    let zCounter = 100;
+    /** Map: id -> { winEl, tabEl, minimized } */
+    const state = new Map();
+
+    // -------------------------------
+    //   З В У К  (Windows-подобный)
+    // -------------------------------
+    function playDing(){
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      // короткий "динь": 880 Гц -> 660 Гц
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.4, ctx.currentTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.26);
+    }
+
+    // -------------------------------
+    //   Ч А С Ы
+    // -------------------------------
+    function updateClock(){
+      const d = new Date();
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mm = String(d.getMinutes()).padStart(2,'0');
+      clockEl.textContent = `${hh}:${mm}`;
+      // подсказка с датой
+      clockEl.title = d.toLocaleDateString();
+    }
+    updateClock();
+    setInterval(updateClock, 1000 * 20); // раз в 20 сек (хватает)
+
+    // -------------------------------
+    //   П У С К  (простое меню)
+    // -------------------------------
+    function toggleStartMenu(force){
+      const open = force ?? !startMenu.classList.contains('open');
+      startMenu.classList.toggle('open', open);
+      startBtn.setAttribute('aria-expanded', String(open));
+    }
+    startBtn.addEventListener('click', ()=>toggleStartMenu());
+    document.addEventListener('click', (e)=>{
+      if (!startMenu.contains(e.target) && e.target !== startBtn) {
+        toggleStartMenu(false);
+      }
+    });
+
+    // -------------------------------
+    //   ПАНЕЛЬ ЗАДАЧ — вкладки
+    // -------------------------------
+    function createTaskTab(app){
+      const btn = document.createElement('button');
+      btn.className = 'task-tab focus-ring';
+      btn.type = 'button';
+      btn.textContent = app.tabLabel;
+      btn.setAttribute('data-app', app.id);
+      btn.addEventListener('click', ()=> toggleAppWindow(app.id));
+      taskButtons.appendChild(btn);
+      return btn;
+    }
+
+    // -------------------------------
+    //   ОКНО: создание + поведение
+    // -------------------------------
+    function createWindow(app){
+      const win = document.createElement('div');
+      win.className = 'win';
+      win.setAttribute('role','dialog');
+      win.setAttribute('aria-modal','false');
+      win.style.zIndex = String(++zCounter);
+
+      // Иконка-цвет
+      const iconClass = app.windowIcon === 'gold' ? 'icon--gold'
+                        : app.windowIcon === 'green' ? 'icon--green' : '';
+
+      win.innerHTML = `
+        <div class="win__titlebar">
+          <div class="win__title">${app.title}</div>
+          <div class="win__buttons">
+            <div class="tb-btn" data-cmd="min" title="Свернуть">–</div>
+            <div class="tb-btn" data-cmd="max" title="Развернуть">□</div>
+            <div class="tb-btn" data-cmd="close" title="Закрыть">×</div>
+          </div>
+        </div>
+        <div class="win__body">
+          <div class="icon ${iconClass}" aria-hidden="true"></div>
+          <div class="msg">
+            <b>${app.heading}</b><br>
+            ${app.text}
+            <div class="hr"></div>
+            <div class="small">Нажми <i>OK</i>, чтобы открыть инструмент.</div>
+          </div>
+        </div>
+        <div class="win__actions">
+          <button class="btn95 focus-ring" data-action="ok">OK</button>
+          <button class="btn95 focus-ring" data-action="cancel">Отмена</button>
+        </div>
+      `;
+
+      desktop.appendChild(win);
+      centerWindow(win);
+      initWindowDrag(win);
+      initWindowButtons(win, app);
+      // двойной клик по синей панели — разворачивает/восстанавливает
+      win.querySelector('.win__titlebar').addEventListener('dblclick', ()=>{
+        toggleMaximized(win);
+      });
+
+      // фокус по клику — наверх
+      win.addEventListener('mousedown', ()=>{
+        win.style.zIndex = String(++zCounter);
+      });
+
+      return win;
+    }
+
+    // Центрирование окна в пределах рабочей области
+    function centerWindow(win){
+      const rect = desktop.getBoundingClientRect();
+      const ww = win.offsetWidth;
+      const wh = win.offsetHeight;
+      const left = Math.max(6, rect.left + (rect.width - ww)/2);
+      const top  = Math.max(6, rect.top  + (rect.height - wh)/2 - 40);
+      win.style.left = left + 'px';
+      win.style.top  = top + 'px';
+    }
+
+    // Перетаскивание окна за заголовок (границы — рабочая область)
+    function initWindowDrag(win){
+      const bar = win.querySelector('.win__titlebar');
+      let sx=0, sy=0, ox=0, oy=0, dragging=false, maximized=false;
+
+      function start(e){
+        // если окно развёрнуто — сначала «восстановить»
+        if (win.dataset.maximized === '1') toggleMaximized(win);
+        dragging = true;
+        const p = ('touches' in e)? e.touches[0] : e;
+        sx = p.clientX; sy = p.clientY;
+        const r = win.getBoundingClientRect();
+        ox = r.left; oy = r.top;
+        e.preventDefault();
+      }
+      function move(e){
+        if(!dragging) return;
+        const p = ('touches' in e)? e.touches[0] : e;
+        const nx = ox + (p.clientX - sx);
+        const ny = oy + (p.clientY - sy);
+        const area = desktop.getBoundingClientRect();
+        const maxX = area.right - win.offsetWidth;
+        const maxY = area.bottom - win.offsetHeight;
+        win.style.left = Math.max(area.left, Math.min(nx, maxX)) + 'px';
+        win.style.top  = Math.max(area.top,  Math.min(ny, maxY)) + 'px';
+      }
+      function end(){ dragging=false; }
+
+      bar.addEventListener('mousedown', start);
+      window.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', end);
+
+      bar.addEventListener('touchstart', start, {passive:false});
+      window.addEventListener('touchmove', move, {passive:false});
+      window.addEventListener('touchend', end);
+    }
+
+    // Кнопки окна: свернуть/развернуть/закрыть, ОК/Отмена
+    function initWindowButtons(win, app){
+      const tab = state.get(app.id)?.tabEl;
+
+      win.querySelectorAll('.tb-btn').forEach(btn=>{
+        const cmd = btn.getAttribute('data-cmd');
+        if (cmd === 'min'){
+          btn.addEventListener('click', ()=> minimizeWindow(app.id));
+        } else if (cmd === 'max'){
+          btn.addEventListener('click', ()=> toggleMaximized(win));
+        } else if (cmd === 'close'){
+          btn.addEventListener('click', ()=> closeWindow(app.id));
+        }
+      });
+
+      win.querySelector('[data-action="ok"]').addEventListener('click', ()=>{
+        window.location.assign(app.link);
+      });
+      win.querySelector('[data-action="cancel"]').addEventListener('click', ()=>{
+        // лёгкое «смятие», затем сворачиваем
+        win.style.transform = 'scale(0.98)';
+        setTimeout(()=>{
+          win.style.transform = 'none';
+          minimizeWindow(app.id);
+        }, 120);
+      });
+
+      // Отражаем активность на вкладке
+      if (tab){
+        tab.classList.add('active');
+        tab.setAttribute('aria-pressed','true');
+      }
+    }
+
+    function toggleMaximized(win){
+      const area = desktop.getBoundingClientRect();
+      const isMax = win.dataset.maximized === '1';
+      if (!isMax){
+        // запомним позицию/размер
+        win.dataset.prevLeft = win.style.left;
+        win.dataset.prevTop  = win.style.top;
+        win.dataset.prevW    = win.style.width;
+        win.dataset.prevH    = win.style.height;
+        win.style.left = area.left + 'px';
+        win.style.top  = area.top + 'px';
+        win.style.width = area.width + 'px';
+        win.style.height = area.height + 'px';
+        win.dataset.maximized = '1';
+      } else {
+        win.style.left = win.dataset.prevLeft || win.style.left;
+        win.style.top  = win.dataset.prevTop  || win.style.top;
+        win.style.width = win.dataset.prevW || '';
+        win.style.height= win.dataset.prevH || '';
+        win.dataset.maximized = '0';
+      }
+    }
+
+    // -------------------------------
+    //   ОТКРЫТИЕ/СВОРАЧИВАНИЕ/ЗАКРЫТИЕ
+    // -------------------------------
+    function openWindow(appId){
+      const app = APPS.find(a=>a.id===appId);
+      if (!app) return;
+
+      let rec = state.get(appId);
+      if (!rec){
+        const tabEl = document.querySelector(`.task-tab[data-app="${appId}"]`) || createTaskTab(app);
+        const winEl = createWindow(app);
+        rec = { winEl, tabEl, minimized: false };
+        state.set(appId, rec);
+      } else if (rec.minimized){
+        // восстановить
+        rec.winEl.classList.remove('hidden');
+        rec.minimized = false;
+        rec.tabEl.classList.add('active');
+      }
+
+      rec.winEl.style.zIndex = String(++zCounter);
+      playDing();
+      return rec.winEl;
+    }
+
+    function minimizeWindow(appId){
+      const rec = state.get(appId);
+      if (!rec) return;
+      rec.winEl.classList.add('hidden');
+      rec.minimized = true;
+      rec.tabEl.classList.remove('active');
+      rec.tabEl.setAttribute('aria-pressed','false');
+    }
+
+    function closeWindow(appId){
+      const rec = state.get(appId);
+      if (!rec) return;
+      rec.winEl.remove();
+      rec.tabEl.classList.remove('active');
+      rec.tabEl.setAttribute('aria-pressed','false');
+      state.delete(appId);
+    }
+
+    function toggleAppWindow(appId){
+      const rec = state.get(appId);
+      if (!rec || rec.minimized){
+        openWindow(appId);
+      } else {
+        // если окно видно — сворачиваем
+        minimizeWindow(appId);
+      }
+    }
+
+    // -------------------------------
+    //   ИНИЦИАЛИЗАЦИЯ
+    // -------------------------------
+    // Создаём вкладки приложений (по ТЗ: окна появляются ТОЛЬКО по клику на вкладку)
+    APPS.forEach(app => {
+      createTaskTab(app);
+    });
+
+    // Клавиатура: Esc — закрыть активное верхнее окно
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'Escape'){
+        // найдём верхнее окно
+        let topId = null, topZ = -1;
+        state.forEach((rec, id)=>{
+          if (!rec.minimized){
+            const z = parseInt(rec.winEl.style.zIndex || '0', 10);
+            if (z > topZ){ topZ = z; topId = id; }
+          }
+        });
+        if (topId) closeWindow(topId);
+      }
+    });
+
+    // На маленьких экранах убедимся, что окна остаются в области
+    window.addEventListener('resize', ()=>{
+      state.forEach(rec=>{
+        const area = desktop.getBoundingClientRect();
+        const r = rec.winEl.getBoundingClientRect();
+        // если окно вылезло — вернём в область
+        const left = Math.min(Math.max(r.left, area.left), area.right - rec.winEl.offsetWidth);
+        const top  = Math.min(Math.max(r.top,  area.top),  area.bottom - rec.winEl.offsetHeight);
+        rec.winEl.style.left = left + 'px';
+        rec.winEl.style.top  = top + 'px';
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
