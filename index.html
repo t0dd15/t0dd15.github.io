@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Retro 95 — эмулятор</title>
 
-  <!-- Пиксельный шрифт для заголовка; системные для текста -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <style>
-    /* ===============================
-       ТЕМА WIN95: цвета и размеры
-       =============================== */
+  
     :root{
       --win95-bg:#008080;
       --win95-face:#C0C0C0;
@@ -29,9 +27,7 @@
       --font-pixel: "Press Start 2P", monospace;
     }
 
-    /* ===============================
-       БАЗА / СЦЕНА
-       =============================== */
+  
     html, body { height: 100%; }
     body{
       margin:0;
@@ -50,7 +46,7 @@
       overflow:hidden;
     }
 
-    /* Рабочий стол (сцена под окнами) */
+   
     .desktop {
       position: fixed;
       inset: 0 0 var(--taskbar-h) 0;
@@ -58,7 +54,7 @@
       outline: none;
     }
 
-    /* Подсказка по перетаскиванию */
+
     .drag-hint {
       position: absolute;
       top: 8px; left: 50%;
@@ -71,9 +67,7 @@
       user-select: none;
     }
 
-    /* ===============================
-       ПАНЕЛЬ ЗАДАЧ
-       =============================== */
+   
     .taskbar {
       position: fixed;
       left: 0; right: 0; bottom: 0;
@@ -89,7 +83,6 @@
       z-index: 10_000;
     }
 
-    /* Кнопка Пуск */
     .start-btn {
       display: inline-grid;
       grid-auto-flow: column;
@@ -109,7 +102,7 @@
       transform: translateY(1px);
     }
 
-    /* Простое меню Пуск */
+  
     .start-menu {
       position: fixed;
       left: 6px;
@@ -129,7 +122,7 @@
     .menu-item:last-child{ border-bottom: 0; }
     .menu-item:hover { background: #000080; color: #fff; }
 
-    /* Вкладки-приложения (кнопки в панели задач) */
+
     .task-buttons {
       display: flex;
       gap: 6px;
@@ -151,11 +144,11 @@
       overflow: hidden;
     }
     .task-tab.active {
-      /* Нажатая/активная вкладка */
+    
       box-shadow: inset 1px 1px 0 var(--win95-dk), inset -1px -1px 0 var(--win95-lt);
     }
 
-    /* Часы */
+ 
     .clock {
       min-width: 80px;
       text-align: center;
@@ -168,9 +161,7 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* ===============================
-       ОКНА (ошибки/диалоги)
-       =============================== */
+   
     .win {
       position: absolute;
       width: min(520px, 95vw);
@@ -226,7 +217,7 @@
     }
     .win__actions{ display:flex; gap:10px; justify-content:flex-end; padding:0 14px 14px }
 
-    /* Вариации иконок (по цветам) */
+
     .icon--gold{
       background:
        radial-gradient(circle at 30% 30%, #ffbf00 0 35%, #a07a00 36% 70%, transparent 0) no-repeat,
@@ -240,35 +231,33 @@
       border-color:#0a6a3f;
     }
 
-    /* Фокус для клавиатуры */
+
     .focus-ring:focus-visible { outline: 2px dashed #000; outline-offset: 2px; }
   </style>
 </head>
 <body>
-  <!-- Рабочий стол -->
+
   <div class="desktop" tabindex="-1" aria-label="Рабочий стол">
     <div class="drag-hint">перетаскивай окна за синий заголовок</div>
   </div>
 
-  <!-- Панель задач -->
+
   <div class="taskbar" role="toolbar" aria-label="Панель задач">
     <button class="start-btn focus-ring" id="startBtn" aria-haspopup="true" aria-expanded="false">🪟 Пуск</button>
     <div class="task-buttons" id="taskButtons" aria-label="Приложения"></div>
     <div class="clock" id="clock" aria-label="Часы">--:--</div>
   </div>
 
-  <!-- Меню Пуск -->
+
   <div class="start-menu" id="startMenu" role="menu">
     <div class="menu-item" role="menuitem">Свойства</div>
     <div class="menu-item" role="menuitem">Выключить…</div>
   </div>
 
   <script>
-  // ===============================
-  //  ЭМУЛЯТОР WIN95 — ЛОГИКА
-  // ===============================
+ 
   (function(){
-    /** Описание «приложений», которые открывают диалоги-ошибки */
+ 
     const APPS = [
       {
         id: 'gradient',
@@ -299,21 +288,19 @@
       }
     ];
 
-    // Узлы DOM
+
     const desktop     = document.querySelector('.desktop');
     const taskButtons = document.getElementById('taskButtons');
     const clockEl     = document.getElementById('clock');
     const startBtn    = document.getElementById('startBtn');
     const startMenu   = document.getElementById('startMenu');
 
-    // Состояние окон и Z-индекс
+
     let zCounter = 100;
-    /** Map: id -> { winEl, tabEl, minimized } */
+
     const state = new Map();
 
-    // -------------------------------
-    //   З В У К  (Windows-подобный)
-    // -------------------------------
+
     function playDing(){
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
@@ -329,9 +316,7 @@
       osc.start(); osc.stop(ctx.currentTime + 0.26);
     }
 
-    // -------------------------------
-    //   Ч А С Ы
-    // -------------------------------
+
     function updateClock(){
       const d = new Date();
       const hh = String(d.getHours()).padStart(2,'0');
@@ -343,9 +328,7 @@
     updateClock();
     setInterval(updateClock, 1000 * 20); // раз в 20 сек (хватает)
 
-    // -------------------------------
-    //   П У С К  (простое меню)
-    // -------------------------------
+ 
     function toggleStartMenu(force){
       const open = force ?? !startMenu.classList.contains('open');
       startMenu.classList.toggle('open', open);
@@ -358,9 +341,7 @@
       }
     });
 
-    // -------------------------------
-    //   ПАНЕЛЬ ЗАДАЧ — вкладки
-    // -------------------------------
+
     function createTaskTab(app){
       const btn = document.createElement('button');
       btn.className = 'task-tab focus-ring';
@@ -372,9 +353,7 @@
       return btn;
     }
 
-    // -------------------------------
-    //   ОКНО: создание + поведение
-    // -------------------------------
+
     function createWindow(app){
       const win = document.createElement('div');
       win.className = 'win';
@@ -382,7 +361,7 @@
       win.setAttribute('aria-modal','false');
       win.style.zIndex = String(++zCounter);
 
-      // Иконка-цвет
+  
       const iconClass = app.windowIcon === 'gold' ? 'icon--gold'
                         : app.windowIcon === 'green' ? 'icon--green' : '';
 
@@ -414,12 +393,11 @@
       centerWindow(win);
       initWindowDrag(win);
       initWindowButtons(win, app);
-      // двойной клик по синей панели — разворачивает/восстанавливает
+
       win.querySelector('.win__titlebar').addEventListener('dblclick', ()=>{
         toggleMaximized(win);
       });
 
-      // фокус по клику — наверх
       win.addEventListener('mousedown', ()=>{
         win.style.zIndex = String(++zCounter);
       });
@@ -427,7 +405,6 @@
       return win;
     }
 
-    // Центрирование окна в пределах рабочей области
     function centerWindow(win){
       const rect = desktop.getBoundingClientRect();
       const ww = win.offsetWidth;
@@ -438,13 +415,12 @@
       win.style.top  = top + 'px';
     }
 
-    // Перетаскивание окна за заголовок (границы — рабочая область)
     function initWindowDrag(win){
       const bar = win.querySelector('.win__titlebar');
       let sx=0, sy=0, ox=0, oy=0, dragging=false, maximized=false;
 
       function start(e){
-        // если окно развёрнуто — сначала «восстановить»
+
         if (win.dataset.maximized === '1') toggleMaximized(win);
         dragging = true;
         const p = ('touches' in e)? e.touches[0] : e;
@@ -475,7 +451,7 @@
       window.addEventListener('touchend', end);
     }
 
-    // Кнопки окна: свернуть/развернуть/закрыть, ОК/Отмена
+
     function initWindowButtons(win, app){
       const tab = state.get(app.id)?.tabEl;
 
@@ -502,7 +478,6 @@
         }, 120);
       });
 
-      // Отражаем активность на вкладке
       if (tab){
         tab.classList.add('active');
         tab.setAttribute('aria-pressed','true');
@@ -532,9 +507,6 @@
       }
     }
 
-    // -------------------------------
-    //   ОТКРЫТИЕ/СВОРАЧИВАНИЕ/ЗАКРЫТИЕ
-    // -------------------------------
     function openWindow(appId){
       const app = APPS.find(a=>a.id===appId);
       if (!app) return;
@@ -546,7 +518,7 @@
         rec = { winEl, tabEl, minimized: false };
         state.set(appId, rec);
       } else if (rec.minimized){
-        // восстановить
+
         rec.winEl.classList.remove('hidden');
         rec.minimized = false;
         rec.tabEl.classList.add('active');
@@ -580,20 +552,17 @@
       if (!rec || rec.minimized){
         openWindow(appId);
       } else {
-        // если окно видно — сворачиваем
+
         minimizeWindow(appId);
       }
     }
 
-    // -------------------------------
-    //   ИНИЦИАЛИЗАЦИЯ
-    // -------------------------------
-    // Создаём вкладки приложений (по ТЗ: окна появляются ТОЛЬКО по клику на вкладку)
+
     APPS.forEach(app => {
       createTaskTab(app);
     });
 
-    // Клавиатура: Esc — закрыть активное верхнее окно
+
     document.addEventListener('keydown', (e)=>{
       if (e.key === 'Escape'){
         // найдём верхнее окно
@@ -608,12 +577,11 @@
       }
     });
 
-    // На маленьких экранах убедимся, что окна остаются в области
     window.addEventListener('resize', ()=>{
       state.forEach(rec=>{
         const area = desktop.getBoundingClientRect();
         const r = rec.winEl.getBoundingClientRect();
-        // если окно вылезло — вернём в область
+
         const left = Math.min(Math.max(r.left, area.left), area.right - rec.winEl.offsetWidth);
         const top  = Math.min(Math.max(r.top,  area.top),  area.bottom - rec.winEl.offsetHeight);
         rec.winEl.style.left = left + 'px';
